@@ -9,7 +9,7 @@ import { botConfig } from '../bot.js';
 const { currency } = botConfig.economy;
 
 export const shopConfig = {
-    name: 'TitanBot Shop',
+    name: '.. Магазин',
     currency: currency.name,
     currencyName: currency.name,
     currencyNamePlural: currency.namePlural || `${currency.name}s`,
@@ -18,29 +18,29 @@ export const shopConfig = {
     categories: [
         {
             id: 'consumables',
-            name: 'Consumables',
-            description: 'One-time use items that provide temporary benefits',
+            name: 'Расходные материалы',
+            description: 'Предметы одноразового пользования, дающие временную выгоду',
             icon: '🍯',
             itemTypes: ['consumable']
         },
         {
             id: 'upgrades',
-            name: 'Upgrades',
-            description: 'Permanent upgrades that enhance your abilities',
+            name: 'Улучшения',
+            description: 'Постоянные улучшения, которые улучшают ваши способности',
             icon: '⚡',
             itemTypes: ['upgrade']
         },
         {
             id: 'tools',
-            name: 'Tools',
-            description: 'Equipment that helps you gather resources more efficiently',
+            name: 'Инструменты',
+            description: 'Инструменты, которое помогает вам более эффективно собирать ресурсы',
             icon: '⛏️',
             itemTypes: ['tool']
         },
         {
             id: 'roles',
-            name: 'Roles',
-            description: 'Special roles with unique perks',
+            name: 'Роли',
+            description: 'Особые роли с уникальными привилегиями',
             icon: '🎭',
             itemTypes: ['role']
         }
@@ -102,7 +102,7 @@ mythic: '#E74C3C'
             enabled: true,
 interval: 86400000,
 announcementChannel: null,
-            message: '🛒 **Shop Restocked!** New items are now available!'
+            message: '🛒 **Запасы в магазине пополнились!** Теперь доступны новые товары!'
         },
         
         sales: {
@@ -111,7 +111,7 @@ announcementChannel: null,
                 {
 day: 0,
 discount: 0.2,
-                    message: '🔥 **Weekend Sale!** 20% off all items!'
+                    message: '🔥 **Распродажа выходного дня!** 20% все предметы!'
                 },
             ]
         }
