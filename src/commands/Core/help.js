@@ -55,8 +55,8 @@ async function createInitialHelpMenu(client) {
 
     const options = [
         {
-            label: "📋 All Commands",
-            description: "View all available commands with pagination",
+            label: "📋 Все команды",
+            description: "Просмотр всех доступных команд с разбивкой по страницам",
             value: ALL_COMMANDS_ID,
         },
         ...categoryDirs.map((category) => {
@@ -66,7 +66,7 @@ async function createInitialHelpMenu(client) {
             const icon = CATEGORY_ICONS[categoryName] || "🔍";
             return {
                 label: `${icon} ${categoryName}`,
-                description: `View commands in the ${categoryName} category`,
+                description: `Просмотр команд в ${categoryName} категория`,
                 value: category,
             };
         }),
@@ -74,112 +74,112 @@ async function createInitialHelpMenu(client) {
 
     const botName = client?.user?.username || "Bot";
     const embed = createEmbed({ 
-        title: `🤖 ${botName} Help Center`,
-        description: "Your all-in-one Discord companion for moderation, economy, fun, and server management.",
+        title: `🤖 ${botName} Справочный центр`,
+        description: "Ваш универсальный партнер Discord для модерации, экономии, развлечения и управления серверами.",
         color: 'primary'
     });
 
     embed.addFields(
         {
-            name: "🛡️ **Moderation**",
-            value: "Server moderation, user management, and enforcement tools",
+            name: "🛡️ **Модерация**",
+            value: "Модерация сервера, управление пользователями и инструменты обеспечения соблюдения",
             inline: true
         },
         {
-            name: "💰 **Economy**",
-            value: "Currency system, shops, and virtual economy",
+            name: "💰 **Экономика**",
+            value: "Валютная система, магазины и виртуальная экономика",
             inline: true
         },
         {
-            name: "🎮 **Fun**",
-            value: "Games, entertainment, and interactive commands",
+            name: "🎮 **Веселье**",
+            value: "Игры, развлечения и интерактивные команды",
             inline: true
         },
         {
-            name: "📊 **Leveling**",
-            value: "User levels, XP system, and progression tracking",
+            name: "📊 **Уровни**",
+            value: "Уровни пользователей, система XP и отслеживание прогресса",
             inline: true
         },
         {
-            name: "🎫 **Tickets**",
-            value: "Support ticket system for server management",
+            name: "🎫 **Тикеты**",
+            value: "Система тикетов поддержки для управления сервером",
             inline: true
         },
         {
-            name: "🎉 **Giveaways**",
-            value: "Automated giveaway management and distribution",
+            name: "🎉 **Розыгрыши**",
+            value: "Автоматизированное управление раздачей подарков и их распространение",
             inline: true
         },
         {
-            name: "👋 **Welcome**",
-            value: "Member welcome messages and onboarding",
+            name: "👋 **Добро пожаловать**",
+            value: "Приветственные сообщения участникам и регистрация",
             inline: true
         },
         {
-            name: "🎂 **Birthdays**",
-            value: "Birthday tracking and celebration features",
+            name: "🎂 **Дни рождения**",
+            value: "Функции отслеживания дня рождения и празднования",
             inline: true
         },
         {
-            name: "👥 **Community**",
-            value: "Community tools, applications, and member engagement",
+            name: "👥 **Сообщество**",
+            value: "Инструменты сообщества, приложения и вовлечение участников",
             inline: true
         },
         {
-            name: "⚙️ **Config**",
-            value: "Server and bot configuration management commands",
+            name: "⚙️ **Конфигурация**",
+            value: "Команды управления конфигурацией сервера и бота",
             inline: true
         },
         {
-            name: "🔢 **Counter**",
-            value: "Live counter channel setup and counter controls",
+            name: "🔢 **Счетчик**",
+            value: "Настройка канала счетчика в реальном времени и управление счетчиком",
             inline: true
         },
         {
-            name: "🎙️ **Join to Create**",
-            value: "Dynamic voice channel creation and management",
+            name: "🎙️ **Присоединяйтесь, чтобы создать**",
+            value: "Создание динамического голосового канала и управление им",
             inline: true
         },
         {
-            name: "🎭 **Reaction Roles**",
-            value: "Self-assignable roles using reaction-role systems",
+            name: "🎭 **Реакция Роли**",
+            value: "Самостоятельно назначаемые роли с использованием систем реагирования на роли",
             inline: true
         },
         {
-            name: "✅ **Verification**",
-            value: "Member verification workflows and access gating",
+            name: "✅ **Проверка**",
+            value: "Рабочие процессы проверки участников и организация доступа",
             inline: true
         },
         {
-            name: "🔧 **Utilities**",
-            value: "Useful tools and server utilities",
+            name: "🔧 **Утилиты**",
+            value: "Полезные инструменты и серверные утилиты",
             inline: true
         }
     );
 
     embed.setFooter({ 
-        text: "Made with ❤️" 
+        text: "Снова в строю ❤️" 
     });
     embed.setTimestamp();
 
     const bugReportButton = new ButtonBuilder()
         .setCustomId(BUG_REPORT_BUTTON_ID)
-        .setLabel("Report Bug")
+        .setLabel("Сообщить об ошибке")
         .setStyle(ButtonStyle.Danger);
 
     const supportButton = new ButtonBuilder()
-        .setLabel("Support Server")
-        .setURL("https://discord.gg/QnWNz2dKCE")
+        .setLabel("Дискорд сервер")
+        .setURL("https://discord.gg/TYZAPe8y6J")
         .setStyle(ButtonStyle.Link);
 
     const touchpointButton = new ButtonBuilder()
-        .setLabel("Learn from Touchpoint")
-        .setURL("https://www.youtube.com/@TouchDisc")
+        .setLabel("Ютубе")
+        .setURL("https://www.youtube.com/@strinf1596")
         .setStyle(ButtonStyle.Link);
 
     const selectRow = createSelectMenu(
         CATEGORY_SELECT_ID,
-        "Select to view the commands",
+        "Выберите, чтобы просмотреть команды",
         options,
     );
 
@@ -198,7 +198,7 @@ async function createInitialHelpMenu(client) {
 export default {
     data: new SlashCommandBuilder()
         .setName("help")
-        .setDescription("Displays the help menu with all available commands"),
+        .setDescription("Отображает меню справки со всеми доступными командами"),
 
     async execute(interaction, guildConfig, client) {
         
@@ -215,8 +215,8 @@ export default {
         setTimeout(async () => {
             try {
                 const closedEmbed = createEmbed({
-                    title: "Help menu closed",
-                    description: "Help menu has been closed, use /help again.",
+                    title: "Меню справки закрыто",
+                    description: "Меню "Помощи" закрыто, снова воспользуйтесь /help.",
                     color: "secondary",
                 });
 
