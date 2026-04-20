@@ -12,17 +12,17 @@ const SHOP_ITEMS = shopItems;
 export default {
     data: new SlashCommandBuilder()
         .setName('buy')
-        .setDescription('Buy an item from the shop')
+        .setDescription('Купите товар в магазине')
         .addStringOption(option =>
             option
                 .setName('item_id')
-                .setDescription('ID of the item to buy')
+                .setDescription('ID о товаре, который нужно купить')
                 .setRequired(true)
         )
         .addIntegerOption(option =>
             option
                 .setName('quantity')
-                .setDescription('Quantity to buy (default: 1)')
+                .setDescription('Количество для покупки (default: 1)')
                 .setRequired(false)
                 .setMinValue(1)
                 .setMaxValue(10)
@@ -41,18 +41,18 @@ export default {
 
             if (!item) {
                 throw createError(
-                    `Item ${itemId} not found`,
+                    `Предмет ${itemId} не найден`,
                     ErrorTypes.VALIDATION,
-                    `The item ID \`${itemId}\` does not exist in the shop.`,
+                    `Этот предмет ID \`${itemId}\` его нет в магазине.`,
                     { itemId }
                 );
             }
 
             if (quantity < 1) {
                 throw createError(
-                    "Invalid quantity",
+                    "Недопустимое количество",
                     ErrorTypes.VALIDATION,
-                    "You must purchase a quantity of 1 or more.",
+                    "Вы должны приобрести 1 или более штук.",
                     { quantity }
                 );
             }
@@ -66,9 +66,9 @@ export default {
 
             if (userData.wallet < totalCost) {
                 throw createError(
-                    "Insufficient funds",
+                    "Недостаточно средств",
                     ErrorTypes.VALIDATION,
-                    `You need **$${totalCost.toLocaleString()}** to purchase ${quantity}x **${item.name}**, but you only have **$${userData.wallet.toLocaleString()}** in cash.`,
+                    `Тебе нужно **$${totalCost.toLocaleString()}** для покупки ${quantity}x **${item.name}**, но у вас есть только **$${userData.wallet.toLocaleString()}** наличными.`,
                     { required: totalCost, current: userData.wallet, itemId, quantity }
                 );
             }
@@ -76,25 +76,25 @@ export default {
             if (item.type === "role" && itemId === "premium_role") {
                 if (!PREMIUM_ROLE_ID) {
                     throw createError(
-                        "Premium role not configured",
+                        "Премиум Роль не настроена",
                         ErrorTypes.CONFIGURATION,
-                        "The **Premium Shop Role** has not been configured by a server administrator yet.",
+                        "Роль **Магазина Премиум Роли** еще не была настроена администратором сервера.",
                         { itemId }
                     );
                 }
                 if (interaction.member.roles.cache.has(PREMIUM_ROLE_ID)) {
                     throw createError(
-                        "Role already owned",
+                        "Роль, которой вы уже владеете",
                         ErrorTypes.VALIDATION,
-                        `You already have the **${item.name}** role.`,
+                        `У вас уже есть возможность **${item.name}** роли.`,
                         { itemId, roleId: PREMIUM_ROLE_ID }
                     );
                 }
                 if (quantity > 1) {
                     throw createError(
-                        "Invalid quantity for role",
+                        "Недопустимое количество для роли",
                         ErrorTypes.VALIDATION,
-                        `You can only purchase the **${item.name}** role once.`,
+                        `Вы можете приобрести роль **${item.name}** только один раз.`,
                         { itemId, quantity }
                     );
                 }
@@ -102,7 +102,7 @@ export default {
 
             userData.wallet -= totalCost;
 
-            let successDescription = `You successfully purchased ${quantity}x **${item.name}** for **$${totalCost.toLocaleString()}**!`;
+            let successDescription = `Вы успешно приобрели ${quantity}x **${item.name}** для **$${totalCost.toLocaleString()}**!`;
 
             if (item.type === "role" && itemId === "premium_role") {
                 const member = interaction.member;
@@ -111,9 +111,9 @@ export default {
 
                 if (!role) {
                     throw createError(
-                        "Role not found",
+                        "Роль не найдена",
                         ErrorTypes.CONFIGURATION,
-                        "The configured premium role no longer exists in this guild.",
+                        "Настроенная Премиум Роль больше не существует в этой гильдии.",
                         { roleId: PREMIUM_ROLE_ID }
                     );
                 }
@@ -123,20 +123,20 @@ export default {
                         role,
                         `Purchased role: ${item.name}`,
                     );
-                    successDescription += `\n\n**👑 The role ${role.toString()} has been granted to you!**`;
+                    successDescription += `\n\n**👑 Роль ${role.toString()} было выданно вам!**`;
                 } catch (roleError) {
                     userData.wallet += totalCost;
                     await setEconomyData(client, guildId, userId, userData);
                     throw createError(
-                        "Role assignment failed",
+                        "Не удалось назначить роль",
                         ErrorTypes.DISCORD_API,
-                        "Successfully deducted money, but failed to grant the role. Your cash has been refunded.",
+                        "Вы успешно вывели деньги, но не смогли предоставить роль. Ваши денежные средства были возвращены.",
                         { roleId: PREMIUM_ROLE_ID, originalError: roleError.message }
                     );
                 }
             } else if (item.type === "upgrade") {
                 userData.upgrades[itemId] = true;
-                successDescription += `\n\n**✨ Your upgrade is now active!**`;
+                successDescription += `\n\n**✨ Ваше обновление теперь активно!**`;
             } else if (item.type === "consumable") {
                 userData.inventory[itemId] =
                     (userData.inventory[itemId] || 0) + quantity;
@@ -145,10 +145,10 @@ export default {
             await setEconomyData(client, guildId, userId, userData);
 
             const embed = successEmbed(
-                "💰 Purchase Successful",
+                "💰 Покупка прошла успешно",
                 successDescription,
             ).addFields({
-                name: "New Balance",
+                name: "Новый баланс",
                 value: `$${userData.wallet.toLocaleString()}`,
                 inline: true,
             });
