@@ -173,8 +173,8 @@ export function getCategoryForItem(itemType) {
         cat.itemTypes.includes(itemType)
     ) || {
         id: 'other',
-        name: 'Other',
-        description: 'Miscellaneous items',
+        name: 'Другое',
+        description: 'Прочие товары',
         icon: '📦'
     };
 }
