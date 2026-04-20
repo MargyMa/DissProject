@@ -14,7 +14,7 @@ const SUCCESS_CHANCE = 0.7;
 export default {
     data: new SlashCommandBuilder()
         .setName('beg')
-        .setDescription('Beg for a small amount of money'),
+        .setDescription('Выпрашивает небольшую сумму денег'),
 
     execute: withErrorHandling(async (interaction, config, client) => {
         const deferred = await InteractionHelper.safeDefer(interaction);
@@ -27,9 +27,9 @@ export default {
             
             if (!userData) {
                 throw createError(
-                    "Failed to load economy data",
+                    "Не удалось загрузить экономические данные",
                     ErrorTypes.DATABASE,
-                    "Failed to load your economy data. Please try again later.",
+                    "Не удалось загрузить ваши экономические данные. Пожалуйста, повторите попытку позже.",
                     { userId, guildId }
                 );
             }
@@ -45,9 +45,9 @@ export default {
                     minutes > 0 ? `${minutes} minute(s)` : `${seconds} second(s)`;
 
                 throw createError(
-                    "Beg cooldown active",
+                    "Время восстановления Beg активно",
                     ErrorTypes.RATE_LIMIT,
-                    `You are tired from begging! Try again in **${timeMessage}**.`,
+                    `Вы устали просить милостыню! Попробуйте еще раз в **${timeMessage}**.`,
                     { remainingTime, minutes, seconds, cooldownType: 'beg' }
                 );
             }
@@ -64,10 +64,10 @@ export default {
                 newCash += amountWon;
 
                 const successMessages = [
-                    `A kind stranger drops **$${amountWon.toLocaleString()}** into your cup.`,
-                    `You spotted an unattended wallet! You grab **$${amountWon.toLocaleString()}** and run.`,
-                    `Someone took pity on you and gave you **$${amountWon.toLocaleString()}**!`,
-                    `You found **$${amountWon.toLocaleString()}** under a park bench.`,
+                    `Добрый незнакомец роняет **$${amountWon.toLocaleString()}** в твою чашку.`,
+                    `Вы заметили оставленный без присмотра бумажник! Вы хватаете **$${amountWon.toLocaleString()}** и убегайте.`,
+                    `Кто-то сжалился над тобой и дал тебе **$${amountWon.toLocaleString()}**!`,
+                    `Вы нашли **$${amountWon.toLocaleString()}** под скамейкой в парке.`,
                 ];
 
                 replyEmbed = MessageTemplates.SUCCESS.DATA_UPDATED(
@@ -78,15 +78,15 @@ export default {
                 );
             } else {
                 const failMessages = [
-                    "The police chased you off. You got nothing.",
-                    "Someone yelled, 'Get a job!' and walked past.",
-                    "A squirrel stole the single coin you had.",
-                    "You tried to beg, but you were too embarrassed and gave up.",
+                    "Полиция прогнала вас. У вас ничего нет.",
+                    "Кто-то крикнул: "Найди работу!" - и прошел мимо.",
+                    "Белка украла единственную монету, которая у тебя была.",
+                    "Ты пытался умолять, но был слишком смущен и сдался.",
                 ];
 
                 replyEmbed = MessageTemplates.ERRORS.INSUFFICIENT_FUNDS(
-                    "nothing",
-                    "You failed to get any money from begging."
+                    "ничего",
+                    "Тебе не удалось заработать денег на попрошайничестве."
                 );
                 replyEmbed.data.description = failMessages[Math.floor(Math.random() * failMessages.length)];
             }
