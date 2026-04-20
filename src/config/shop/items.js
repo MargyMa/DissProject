@@ -179,7 +179,7 @@ export function getItemPrice(itemId) {
 export function validatePurchase(itemId, userData) {
     const item = getItemById(itemId);
     if (!item) {
-        return { valid: false, reason: 'Item not found' };
+        return { valid: false, reason: 'Товар не найден' };
     }
 
     
@@ -191,7 +191,7 @@ export function validatePurchase(itemId, userData) {
         if (currentQuantity >= item.maxQuantity) {
             return { 
                 valid: false, 
-                reason: `You can only have a maximum of ${item.maxQuantity} ${item.name}s` 
+                reason: `У вас может быть только максимум ${item.maxQuantity} ${item.name}s` 
             };
         }
     }
@@ -201,7 +201,7 @@ export function validatePurchase(itemId, userData) {
         if (upgrades[itemId]) {
             return { 
                 valid: false, 
-                reason: `You've already purchased ${item.name}` 
+                reason: `Вы уже приобрели ${item.name}` 
             };
         }
     }
@@ -212,7 +212,7 @@ export function validatePurchase(itemId, userData) {
         if (itemId !== 'bank_note' && currentQuantity > 0) {
             return { 
                 valid: false, 
-                reason: `You already have a ${item.name}` 
+                reason: `У вас уже есть ${item.name}` 
             };
         }
     }
@@ -221,7 +221,7 @@ export function validatePurchase(itemId, userData) {
         if (userData.roles?.includes(item.roleId)) {
             return { 
                 valid: false, 
-                reason: `You already have the ${item.name} role` 
+                reason: `У вас уже есть возможность ${item.name} role` 
             };
         }
     }
