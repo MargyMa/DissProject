@@ -216,7 +216,7 @@ export default {
             try {
                 const closedEmbed = createEmbed({
                     title: "Меню справки закрыто",
-                    description: "Меню "Помощи" закрыто, снова воспользуйтесь /help.",
+                    description: "Меню Помощи закрыто, снова воспользуйтесь /help.",
                     color: "secondary",
                 });
 
