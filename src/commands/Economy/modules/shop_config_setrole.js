@@ -8,7 +8,7 @@ export default {
     async execute(interaction, config, client) {
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
             return InteractionHelper.safeReply(interaction, {
-                embeds: [errorEmbed('Permission Denied', 'You need **Manage Server** permissions to set the premium role.')],
+                embeds: [errorEmbed('В разрешении отказано', 'Вам нужны разрешения **На управление сервером**, чтобы установить премиум-роль.')],
                 ephemeral: true,
             });
         }
@@ -22,13 +22,13 @@ export default {
             await setGuildConfig(client, guildId, currentConfig);
 
             return InteractionHelper.safeReply(interaction, {
-                embeds: [successEmbed('✅ Premium Role Set', `The **Premium Shop Role** has been set to ${role.toString()}. Members who purchase the Premium Role item will be granted this role.`)],
+                embeds: [successEmbed('✅ Набор ролей Премиум Ролей', `Для роли **Магазина Премиум Роли** было установлено значение ${role.toString()}. Участники, которые приобретут Премиум-роль, получат эту роль.`)],
                 ephemeral: true,
             });
         } catch (error) {
             logger.error('shop_config_setrole error:', error);
             return InteractionHelper.safeReply(interaction, {
-                embeds: [errorEmbed('System Error', 'Could not save the guild configuration.')],
+                embeds: [errorEmbed('Системная ошибка', 'Не удалось сохранить конфигурацию гильдии.')],
                 ephemeral: true,
             });
         }
