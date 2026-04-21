@@ -6,12 +6,12 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 export default {
     data: new SlashCommandBuilder()
         .setName("ping")
-        .setDescription("Checks the bot's latency and API speed"),
+        .setDescription("Проверяет задержку бота и скорость работы API"),
 
     async execute(interaction) {
         const deferSuccess = await InteractionHelper.safeDefer(interaction);
         if (!deferSuccess) {
-            logger.warn(`Ping interaction defer failed`, {
+            logger.warn(`Не удалось выполнить отсрочку взаимодействия Ping`, {
                 userId: interaction.user.id,
                 guildId: interaction.guildId,
                 commandName: 'ping'
@@ -21,7 +21,7 @@ export default {
 
         try {
             await InteractionHelper.safeEditReply(interaction, {
-                content: "Pinging...",
+                content: "Раздающийся сигнал...",
             });
 
             const latency = Date.now() - interaction.createdTimestamp;
@@ -37,14 +37,14 @@ export default {
                 embeds: [embed],
             });
         } catch (error) {
-            logger.error('Ping command error:', error);
+            logger.error('Ошибка команды проверки связи:', error);
             try {
                 return await InteractionHelper.safeReply(interaction, {
-                    embeds: [createEmbed({ title: 'System Error', description: 'Could not determine latency at this time.', color: 'error' })],
+                    embeds: [createEmbed({ title: 'Системная ошибка', description: 'В данный момент не удалось определить задержку.', color: 'error' })],
                     flags: MessageFlags.Ephemeral,
                 });
             } catch (replyError) {
-                logger.error('Failed to send error reply:', replyError);
+                logger.error('Не удалось отправить ответ с ошибкой:', replyError);
             }
         }
     },
