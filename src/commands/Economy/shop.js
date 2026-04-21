@@ -9,24 +9,24 @@ import shopConfigSetrole from './modules/shop_config_setrole.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('shop')
-        .setDescription('Economy shop commands.')
+        .setDescription('Команды экономичного магазина.')
         .addSubcommand(subcommand =>
             subcommand
                 .setName('browse')
-                .setDescription('Browse the economy shop.'),
+                .setDescription('Загляните в магазин эконом-класса.'),
         )
         .addSubcommandGroup(group =>
             group
                 .setName('config')
-                .setDescription('Configure shop settings. (Manage Server required)')
+                .setDescription('Настройка параметров магазина. (Требуется управлять сервером)')
                 .addSubcommand(subcommand =>
                     subcommand
                         .setName('setrole')
-                        .setDescription('Set the Discord role granted when the Premium Role shop item is purchased.')
+                        .setDescription('Установите роль Discord, которая будет предоставляться при покупке предмета магазина Премиум Роли.')
                         .addRoleOption(option =>
                             option
                                 .setName('role')
-                                .setDescription('The role to grant for Premium Role purchases.')
+                                .setDescription('Роль, которую нужно предоставить для покупки премиум-ролей.')
                                 .setRequired(true),
                         ),
                 ),
@@ -46,13 +46,13 @@ export default {
             }
 
             return InteractionHelper.safeReply(interaction, {
-                embeds: [errorEmbed('Error', 'Unknown subcommand.')],
+                embeds: [errorEmbed('Ошибка', 'Неизвестная подкоманда.')],
                 flags: MessageFlags.Ephemeral,
             });
         } catch (error) {
             logger.error('shop command error:', error);
             await InteractionHelper.safeReply(interaction, {
-                content: '❌ An error occurred while running the shop command.',
+                content: '❌ При выполнении команды shop произошла ошибка.',
                 flags: MessageFlags.Ephemeral,
             }).catch(() => {});
         }
