@@ -8,11 +8,11 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('deposit')
-        .setDescription('Deposit money from your wallet into your bank')
+        .setDescription('Внесите деньги со своего кошелька в свой банк')
         .addStringOption(option =>
             option
                 .setName('amount')
-                .setDescription('Amount to deposit (number or "all")')
+                .setDescription('Сумма для внесения депозита (число или "all")')
                 .setRequired(true)
         ),
 
@@ -28,9 +28,9 @@ export default {
             
             if (!userData) {
                 throw createError(
-                    "Failed to load economy data",
+                    "Не удалось загрузить экономические данные",
                     ErrorTypes.DATABASE,
-                    "Failed to load your economy data. Please try again later.",
+                    "Не удалось загрузить ваши экономические данные. Пожалуйста, повторите попытку позже.",
                     { userId, guildId }
                 );
             }
@@ -45,9 +45,9 @@ export default {
 
                 if (isNaN(depositAmount) || depositAmount <= 0) {
                     throw createError(
-                        "Invalid deposit amount",
+                        "Недействительная сумма депозита",
                         ErrorTypes.VALIDATION,
-                        `Please enter a valid number or 'all'. You entered: \`${amountInput}\``,
+                        `Пожалуйста, введите действительную сумму или "all". Вы ввели: \`${amountInput}\``,
                         { amountInput, userId }
                     );
                 }
@@ -55,9 +55,9 @@ export default {
 
             if (depositAmount === 0) {
                 throw createError(
-                    "Zero deposit amount",
+                    "Нулевая сумма депозита",
                     ErrorTypes.VALIDATION,
-                    "You have no cash to deposit.",
+                    "У вас нет наличных для внесения депозита.",
                     { userId, walletBalance: userData.wallet }
                 );
             }
@@ -67,8 +67,8 @@ export default {
                 await interaction.followUp({
                     embeds: [
                         MessageTemplates.ERRORS.INVALID_INPUT(
-                            "deposit amount",
-                            `You tried to deposit more than you have. Depositing your remaining cash: **$${depositAmount.toLocaleString()}**`
+                            "сумма депозита",
+                            `Вы пытались внести на счет больше, чем у вас есть. Внесение оставшихся наличных: **$${depositAmount.toLocaleString()}**`
                         )
                     ],
                     flags: ["Ephemeral"],
@@ -79,9 +79,9 @@ export default {
 
             if (availableSpace <= 0) {
                 throw createError(
-                    "Bank is full",
+                    "Банк полон",
                     ErrorTypes.VALIDATION,
-                    `Your bank is currently full (Max Capacity: $${maxBank.toLocaleString()}). Purchase a **Bank Upgrade** to increase your limit.`,
+                    `В данный момент ваш банк заполнен (Максимальная вместимость: $${maxBank.toLocaleString()}). Приобретите **Улучшение банка** чтобы увеличить свой лимит.`,
                     { maxBank, currentBank: userData.bank, userId }
                 );
             }
@@ -94,8 +94,8 @@ export default {
                     await interaction.followUp({
                         embeds: [
                             MessageTemplates.ERRORS.INVALID_INPUT(
-                                "deposit amount",
-                                `You only had space for **$${depositAmount.toLocaleString()}** in your bank account (Max: $${maxBank.toLocaleString()}). The rest remains in your cash.`
+                                "сумма депозита",
+                                `У тебя было место только для **$${depositAmount.toLocaleString()}** на вашем банковском счете (Максимум: $${maxBank.toLocaleString()}). Остальное остается у вас наличными.`
                             )
                         ],
                         flags: ["Ephemeral"],
@@ -105,9 +105,9 @@ export default {
 
             if (depositAmount === 0) {
                 throw createError(
-                    "No space or cash for deposit",
+                    "Нет места или наличных для внесения депозита",
                     ErrorTypes.VALIDATION,
-                    "The amount you tried to deposit was either 0 or exceeded your bank capacity after checking your cash balance.",
+                    "Сумма, которую вы пытались внести, была либо равна 0, либо превысила ваши банковские возможности после проверки баланса наличных.",
                     { depositAmount, availableSpace, walletBalance: userData.wallet }
                 );
             }
@@ -118,17 +118,17 @@ export default {
             await setEconomyData(client, guildId, userId, userData);
 
             const embed = MessageTemplates.SUCCESS.DATA_UPDATED(
-                "deposit",
-                `You successfully deposited **$${depositAmount.toLocaleString()}** into your bank.`
+                "депозит",
+                `Вы успешно внесли депозит **$${depositAmount.toLocaleString()}** в ваш банк.`
             )
                 .addFields(
                     {
-                        name: "💵 New Cash Balance",
+                        name: "💵 Новая сумма баланса",
                         value: `$${userData.wallet.toLocaleString()}`,
                         inline: true,
                     },
                     {
-                        name: "🏦 New Bank Balance",
+                        name: "🏦 Новый банковский баланс",
                         value: `$${userData.bank.toLocaleString()} / $${maxBank.toLocaleString()}`,
                         inline: true,
                     },
