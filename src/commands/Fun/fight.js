@@ -51,7 +51,7 @@ export default {
 
       const log = [];
       log.push(
-        `💥 **${challenger.username}** проблемы **${opponent.username}** на дуэль! (Лучший из ${rounds} раундов)`,
+        `💥 **${challenger.username}** вызвал **${opponent.username}** на дуэль! (Лучший из ${rounds} раундов)`,
       );
 
       for (let i = 1; i <= rounds; i++) {
@@ -64,7 +64,7 @@ export default {
           "Парирует и контратакует",
         ][rand(0, 3)];
         log.push(
-          `\n**Круглый ${i}:** ${attacker.username} ${action} на ${target.username} для ${rand(1, damage)} повреждение!`,
+          `\n**Раунд ${i}:** ${attacker.username} ${action} на ${target.username} для ${rand(1, damage)} повреждение!`,
         );
       }
 
