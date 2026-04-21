@@ -11,7 +11,7 @@ const SHOP_ITEMS = shopItems;
 export default {
     data: new SlashCommandBuilder()
         .setName('inventory')
-        .setDescription('View your economy inventory'),
+        .setDescription('Просмотрите свой инвентарь'),
 
     execute: withErrorHandling(async (interaction, config, client) => {
         const deferred = await InteractionHelper.safeDefer(interaction);
@@ -26,16 +26,16 @@ export default {
 
             if (!userData) {
                 throw createError(
-                    "Failed to load economy data for inventory",
+                    "Не удалось загрузить экономичные данные для инвентаризации",
                     ErrorTypes.DATABASE,
-                    "Failed to load your economy data. Please try again later.",
+                    "Не удалось загрузить ваши экономические данные. Пожалуйста, повторите попытку позже.",
                     { userId, guildId }
                 );
             }
 
             const inventory = userData.inventory || {};
 
-            let inventoryDescription = "Your inventory is currently empty.";
+            let inventoryDescription = "В данный момент ваш инвентарь пуст.";
 
             if (Object.keys(inventory).length > 0) {
                 inventoryDescription = Object.entries(inventory)
@@ -61,7 +61,7 @@ export default {
             });
 
             const embed = createEmbed({ 
-                title: `📦 ${interaction.user.username}'s Inventory`, 
+                title: `📦 ${interaction.user.username}'s Инвентарь`, 
                 description: inventoryDescription, 
             }).setThumbnail(interaction.user.displayAvatarURL());
 
