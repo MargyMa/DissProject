@@ -10,11 +10,11 @@ const EMBED_DESCRIPTION_LIMIT = 4096;
 export default {
     data: new SlashCommandBuilder()
     .setName("fight")
-    .setDescription("Starts a simulated 1v1 text-based battle.")
+    .setDescription("Запускает имитацию текстового боя 1 на 1.")
     .addUserOption((option) =>
       option
         .setName("opponent")
-        .setDescription("The user to fight.")
+        .setDescription("Пользователю для борьбы.")
         .setRequired(true),
     ),
   category: 'Fun',
@@ -29,8 +29,8 @@ export default {
       
       if (challenger.id === opponent.id) {
         const embed = warningEmbed(
-          `**${challenger.username}**, you can't fight yourself! That's a draw before it even starts.`,
-          "⚔️ Invalid Challenge"
+          `**${challenger.username}**, Ты не можешь бороться сам с собой! Это ничья еще до начала игры.`,
+          "⚔️ Недействительный вызов"
         );
         return await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
       }
@@ -38,8 +38,8 @@ export default {
       
       if (opponent.bot) {
         const embed = warningEmbed(
-          "You can't fight bots! Challenge a real person instead.",
-          "⚔️ Invalid Opponent"
+          "Ты не можешь сражаться с ботами! Брось вызов реальному человеку.",
+          "⚔️ Недействительный противник"
         );
         return await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
       }
@@ -51,25 +51,25 @@ export default {
 
       const log = [];
       log.push(
-        `💥 **${challenger.username}** challenges **${opponent.username}** to a duel! (Best of ${rounds} rounds)`,
+        `💥 **${challenger.username}** проблемы **${opponent.username}** на дуэль! (Лучший из ${rounds} раундов)`,
       );
 
       for (let i = 1; i <= rounds; i++) {
         const attacker = rand(0, 1) === 0 ? challenger : opponent;
         const target = attacker.id === challenger.id ? opponent : challenger;
         const action = [
-          "throws a wild punch",
-          "lands a critical hit",
-          "uses a weak spell",
-          "parries and counterattacks",
+          "Наносит дикий удар кулаком",
+          "Наносит критический удар",
+          "Использует слабое заклинание",
+          "Парирует и контратакует",
         ][rand(0, 3)];
         log.push(
-          `\n**Round ${i}:** ${attacker.username} ${action} on ${target.username} for ${rand(1, damage)} damage!`,
+          `\n**Круглый ${i}:** ${attacker.username} ${action} на ${target.username} для ${rand(1, damage)} повреждение!`,
         );
       }
 
       const outcomeText = log.join("\n");
-      const winnerText = `👑 **${winner.username}** has defeated ${loser.username} and claims the victory!`;
+      const winnerText = `👑 **${winner.username}** победил ${loser.username} и претендует на победу!`;
       const fullDescription = `${outcomeText}\n\n${winnerText}`;
 
       const description = fullDescription.length <= EMBED_DESCRIPTION_LIMIT
@@ -78,13 +78,13 @@ export default {
 
       const embed = successEmbed(
         description,
-        "🏆 Duel Complete!"
+        "🏆 Дуэль завершена!"
       );
 
       await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
-      logger.debug(`Fight command executed between ${challenger.id} and ${opponent.id} in guild ${interaction.guildId}`);
+      logger.debug(`Боевая команда, выполненная между ${challenger.id} and ${opponent.id} в гильдии ${interaction.guildId}`);
     } catch (error) {
-      logger.error('Fight command error:', error);
+      logger.error('Ошибка боевой команды:', error);
       await handleInteractionError(interaction, error, {
         commandName: 'fight',
         source: 'fight_command'
