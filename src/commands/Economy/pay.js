@@ -139,7 +139,7 @@ export default {
             try {
                 const receiverEmbed = createEmbed({ 
                     title: "💰 Входящий платеж!", 
-                    description: `${interaction.user.username} paid you **$${amount.toLocaleString()}**.` 
+                    description: `${interaction.user.username} заплатил тебе **$${amount.toLocaleString()}**.` 
                 }).addFields({
                     name: "Ваш новый баланс",
                     value: `$${updatedReceiverData.wallet.toLocaleString()}`,
