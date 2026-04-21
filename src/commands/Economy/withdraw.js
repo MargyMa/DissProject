@@ -8,11 +8,11 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('withdraw')
-        .setDescription('Withdraw money from your bank to your wallet')
+        .setDescription('Переведите деньги из банка на свой кошелек')
         .addIntegerOption(option =>
             option
                 .setName('amount')
-                .setDescription('Amount to withdraw')
+                .setDescription('Сумма для вывода')
                 .setRequired(true)
                 .setMinValue(1)
         ),
@@ -28,9 +28,9 @@ export default {
             
             if (!userData) {
                 throw createError(
-                    "Failed to load economy data",
+                    "Не удалось загрузить экономические данные",
                     ErrorTypes.DATABASE,
-                    "Failed to load your economy data. Please try again later.",
+                    "Не удалось загрузить данные о вашей экономике. Пожалуйста, повторите попытку позже.",
                     { userId, guildId }
                 );
             }
@@ -39,9 +39,9 @@ export default {
 
             if (withdrawAmount <= 0) {
                 throw createError(
-                    "Invalid withdrawal amount",
+                    "Недействительная сумма вывода средств",
                     ErrorTypes.VALIDATION,
-                    "You must withdraw a positive amount.",
+                    "Вы должны вывести положительную сумму.",
                     { amount: withdrawAmount, userId }
                 );
             }
@@ -52,9 +52,9 @@ export default {
 
             if (withdrawAmount === 0) {
                 throw createError(
-                    "Empty bank account",
+                    "Пустой банковский счет",
                     ErrorTypes.VALIDATION,
-                    "Your bank account is empty.",
+                    "Ваш банковский счет пуст.",
                     { userId, bankBalance: userData.bank }
                 );
             }
@@ -66,16 +66,16 @@ export default {
 
             const embed = MessageTemplates.SUCCESS.DATA_UPDATED(
                 "withdrawal",
-                `You successfully withdrew **$${withdrawAmount.toLocaleString()}** from your bank.`
+                `Вы успешно вывели **$${withdrawAmount.toLocaleString()}** из вашего банка.`
             )
                 .addFields(
                     {
-                        name: "💵 New Cash Balance",
+                        name: "💵 Новый денежный баланс",
                         value: `$${userData.wallet.toLocaleString()}`,
                         inline: true,
                     },
                     {
-                        name: "🏦 New Bank Balance",
+                        name: "🏦 Новый банковский баланс",
                         value: `$${userData.bank.toLocaleString()}`,
                         inline: true,
                     },
