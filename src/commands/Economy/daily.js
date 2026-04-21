@@ -14,7 +14,7 @@ const PREMIUM_BONUS_PERCENTAGE = 0.1;
 export default {
     data: new SlashCommandBuilder()
         .setName('daily')
-        .setDescription('Получите свое ежедневное денежное вознаграждение'),
+        .setDescription('Получите свое ежедневное вознаграждение'),
 
     execute: withErrorHandling(async (interaction, config, client) => {
         const deferred = await InteractionHelper.safeDefer(interaction);
@@ -44,7 +44,7 @@ export default {
                 throw createError(
                     "Ежедневное восстановление активировано",
                     ErrorTypes.RATE_LIMIT,
-                    `Вам нужно подождать, прежде чем снова подавать заявку на ежедневное вознагрождение. Повторите попытку в **${formatDuration(timeRemaining)}**.`,
+                    `Вам нужно подождать, прежде чем снова подавать заявку на ежедневное вознагрождение. Повторите попытку через **${formatDuration(timeRemaining)}**.`,
                     { timeRemaining, cooldownType: 'daily' }
                 );
             }
@@ -85,7 +85,7 @@ export default {
 
             const embed = successEmbed(
                 "✅ Ежедневный получен!",
-                `Вы потребовали свой ежедневный **$${earned.toLocaleString()}**!${bonusMessage}`
+                `Вы забрали ежедневный **$${earned.toLocaleString()}**!${bonusMessage}`
             )
                 .addFields({
                     name: "Новый баланс",
@@ -95,7 +95,7 @@ export default {
                 .setFooter({
                     text: hasPremiumRole
                         ? `Следующий запрос через 24 часа. (Премиум Актив)`
-                        : `Следующая запрос через 24 часа.`,
+                        : `Следующий запрос через 24 часа.`,
                 });
 
             await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
