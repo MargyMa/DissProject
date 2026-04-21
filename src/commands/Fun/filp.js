@@ -7,7 +7,7 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 export default {
     data: new SlashCommandBuilder()
     .setName("flip")
-    .setDescription("Flips a coin (Heads or Tails)."),
+    .setDescription("Подбрасывает монетку (орел или решка)."),
   category: 'Fun',
 
   async execute(interaction, config, client) {
@@ -16,14 +16,14 @@ export default {
       const emoji = result === "Heads" ? "🪙" : "🔮";
 
       const embed = successEmbed(
-        "Heads or Tails?",
-        `The coin landed on... **${result}** ${emoji}!`,
+        "Орел или решка?",
+        `Монета упала на... **${result}** ${emoji}!`,
       );
 
       await InteractionHelper.safeReply(interaction, { embeds: [embed] });
-      logger.debug(`Flip command executed by user ${interaction.user.id} in guild ${interaction.guildId}`);
+      logger.debug(`Команда Flip, выполняемая пользователем ${interaction.user.id} в гильдии ${interaction.guildId}`);
     } catch (error) {
-      logger.error('Flip command error:', error);
+      logger.error('Ошибка команды переворота:', error);
       await handleInteractionError(interaction, error, {
         commandName: 'flip',
         source: 'flip_command'
