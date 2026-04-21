@@ -7,7 +7,7 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 export default {
     data: new SlashCommandBuilder()
         .setName("eleaderboard")
-        .setDescription("View the server's top 10 richest users.")
+        .setDescription("Просмотрите топ-10 самых богатых пользователей сервера.")
         .setDMPermission(false),
     
     
@@ -17,7 +17,7 @@ export default {
 
             const guildId = interaction.guildId;
 
-            logger.debug(`[ECONOMY] Leaderboard requested`, { guildId });
+            logger.debug(`[ECONOMY] Запрошена таблица лидеров`, { guildId });
 
             const prefix = `economy:${guildId}:`;
 
@@ -29,9 +29,9 @@ export default {
 
             if (allKeys.length === 0) {
                 throw createError(
-                    "No economy data found",
+                    "Данные по экономике не найдены",
                     ErrorTypes.VALIDATION,
-                    "No economy data found for this server."
+                    "Для этого сервера не найдено никаких экономических данных."
                 );
             }
 
@@ -76,12 +76,12 @@ export default {
 
             const description = leaderboardEntries.length > 0
                 ? leaderboardEntries.join("\n")
-                : "No economy data is available for this server yet.";
+                : "Для этого сервера пока не доступны данные об экономии.";
 
             const embed = createEmbed({
-                title: `Economy Leaderboard`,
+                title: `Таблица лидеров по экономике`,
                 description,
-                footer: `Your Rank: ${userRank > 0 ? `#${userRank}` : "No ranking data available"}`,
+                footer: `Ваш ранг: ${userRank > 0 ? `#${userRank}` : "Данные о ранге отсутствуют"}`,
             });
 
             await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
