@@ -32,7 +32,7 @@ export default {
       const crimeRaw = interaction.options.getString("crime");
 
       
-      let crime = "Слишком очаровательна для этого официанта.";
+      let crime = "Слишком очаровательный для этого официанта.";
       if (crimeRaw) {
         const sanitizedCrime = sanitizeInput(crimeRaw.trim(), 100);
         if (sanitizedCrime.length > 0) {
