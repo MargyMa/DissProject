@@ -5,30 +5,30 @@ import { handleInteractionError, TitanBotError, ErrorTypes } from '../../utils/e
 
 import { InteractionHelper } from '../../utils/interactionHelper.js';
 const facts = [
-  "A day on Venus is longer than a year on Venus.",
-  "The shortest war in history was between Britain and Zanzibar on August 27, 1896. It lasted 38 to 45 minutes.",
-  "The word 'Strengths' is the longest word in the English language with only one vowel.",
-  "Octopuses have three hearts and blue blood.",
-  "There are more trees on Earth than stars in the Milky Way galaxy.",
-  "The total weight of all the ants on Earth is thought to be about the same as the total weight of all humans.",
+  "День на Венере длиннее года на Венере.",
+  "Самая короткая война в истории произошла между Великобританией и Занзибаром 27 августа 1896 года. Она длилась от 38 до 45 минут..",
+  "Слово «Strengths» — самое длинное слово в английском языке, в котором всего одна гласная буква..",
+  "У осьминогов три сердца и голубая кровь.",
+  "На Земле больше деревьев, чем звезд в галактике Млечный Путь.",
+  "Считается, что общий вес всех муравьев на Земле примерно равен общему весу всех людей.",
 ];
 
 export default {
     data: new SlashCommandBuilder()
     .setName("fact")
-    .setDescription("Shares a random, interesting fact."),
+    .setDescription("Делится случайным интересным фактом."),
   category: 'Fun',
 
   async execute(interaction, config, client) {
     try {
       const randomFact = facts[Math.floor(Math.random() * facts.length)];
 
-      const embed = successEmbed("🧠 Did You Know?", `💡 **${randomFact}**`);
+      const embed = successEmbed("🧠 Вы знали?", `💡 **${randomFact}**`);
 
       await InteractionHelper.safeReply(interaction, { embeds: [embed] });
-      logger.debug(`Fact command executed by user ${interaction.user.id} in guild ${interaction.guildId}`);
+      logger.debug(`Команда Fact, выполняемая пользователем ${interaction.user.id} в гильдии ${interaction.guildId}`);
     } catch (error) {
-      logger.error('Fact command error:', error);
+      logger.error('Ошибка команды Fact:', error);
       await handleInteractionError(interaction, error, {
         commandName: 'fact',
         source: 'fact_command'
