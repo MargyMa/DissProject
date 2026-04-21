@@ -14,7 +14,7 @@ const PREMIUM_BONUS_PERCENTAGE = 0.1;
 export default {
     data: new SlashCommandBuilder()
         .setName('daily')
-        .setDescription('Claim your daily cash reward'),
+        .setDescription('Получите свое ежедневное денежное вознаграждение'),
 
     execute: withErrorHandling(async (interaction, config, client) => {
         const deferred = await InteractionHelper.safeDefer(interaction);
@@ -30,9 +30,9 @@ export default {
             
             if (!userData) {
                 throw createError(
-                    "Failed to load economy data for daily",
+                    "Не удалось загрузить экономические данные за день",
                     ErrorTypes.DATABASE,
-                    "Failed to load your economy data. Please try again later.",
+                    "Не удалось загрузить ваши экономические данные. Пожалуйста, повторите попытку позже.",
                     { userId, guildId }
                 );
             }
@@ -42,9 +42,9 @@ export default {
             if (now < lastDaily + DAILY_COOLDOWN) {
                 const timeRemaining = lastDaily + DAILY_COOLDOWN - now;
                 throw createError(
-                    "Daily cooldown active",
+                    "Ежедневное восстановление активировано",
                     ErrorTypes.RATE_LIMIT,
-                    `You need to wait before claiming daily again. Try again in **${formatDuration(timeRemaining)}**.`,
+                    `Вам нужно подождать, прежде чем снова подавать заявку на ежедневное вознагрождение. Повторите попытку в **${formatDuration(timeRemaining)}**.`,
                     { timeRemaining, cooldownType: 'daily' }
                 );
             }
@@ -65,7 +65,7 @@ export default {
                     DAILY_AMOUNT * PREMIUM_BONUS_PERCENTAGE,
                 );
                 earned += bonusAmount;
-                bonusMessage = `\n✨ **Premium Bonus:** +$${bonusAmount.toLocaleString()}`;
+                bonusMessage = `\n✨ **Премиальный бонус:** +$${bonusAmount.toLocaleString()}`;
                 hasPremiumRole = true;
             }
 
@@ -84,18 +84,18 @@ export default {
             });
 
             const embed = successEmbed(
-                "✅ Daily Claimed!",
-                `You have claimed your daily **$${earned.toLocaleString()}**!${bonusMessage}`
+                "✅ Ежедневный получен!",
+                `Вы потребовали свой ежедневный **$${earned.toLocaleString()}**!${bonusMessage}`
             )
                 .addFields({
-                    name: "New Cash Balance",
+                    name: "Новый баланс",
                     value: `$${userData.wallet.toLocaleString()}`,
                     inline: true,
                 })
                 .setFooter({
                     text: hasPremiumRole
-                        ? `Next claim in 24 hours. (Premium Active)`
-                        : `Next claim in 24 hours.`,
+                        ? `Следующий запрос через 24 часа. (Премиум Актив)`
+                        : `Следующая запрос через 24 часа.`,
                 });
 
             await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
