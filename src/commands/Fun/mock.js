@@ -8,11 +8,11 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 export default {
     data: new SlashCommandBuilder()
     .setName("mock")
-    .setDescription("cOnVeRtS yOuR tExT tO sPoNgEbOb CaSe.")
+    .setDescription("Превратите свой текст в песню.")
     .addStringOption((option) =>
       option
         .setName("text")
-        .setDescription("The text to mock.")
+        .setDescription("Текст для насмешек.")
         .setRequired(true)
         .setMaxLength(1000),
     ),
@@ -25,9 +25,9 @@ export default {
       
       if (!originalText || originalText.trim().length === 0) {
         throw new TitanBotError(
-          'Empty text provided to mock command',
+          'Пустой текст для имитации команды',
           ErrorTypes.USER_INPUT,
-          'Please provide some text to mock!'
+          'Пожалуйста, предоставьте текст для имитации!'
         );
       }
 
@@ -47,9 +47,9 @@ export default {
       const embed = successEmbed("sPoNgEbOb cAsE", `"${mockedText}"`);
 
       await InteractionHelper.safeReply(interaction, { embeds: [embed] });
-      logger.debug(`Mock command executed by user ${interaction.user.id} in guild ${interaction.guildId}`);
+      logger.debug(`Имитация команды, выполняемой пользователем ${interaction.user.id} в гильдии ${interaction.guildId}`);
     } catch (error) {
-      logger.error('Mock command error:', error);
+      logger.error('Имитация ошибки команды:', error);
       await handleInteractionError(interaction, error, {
         commandName: 'mock',
         source: 'mock_command'
