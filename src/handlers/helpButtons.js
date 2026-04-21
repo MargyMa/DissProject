@@ -47,8 +47,8 @@ async function createCategorySelectMenu() {
 
     const options = [
         {
-            label: "📋 All Commands",
-            description: "View all available commands with pagination",
+            label: "📋 Все команды",
+            description: "Просмотр всех доступных команд с разбивкой по страницам",
             value: ALL_COMMANDS_ID,
         },
         ...categoryDirs.map((category) => {
@@ -58,89 +58,89 @@ async function createCategorySelectMenu() {
             const icon = CATEGORY_ICONS[categoryName] || "🔍";
             return {
                 label: `${icon} ${categoryName}`,
-                description: `View commands in the ${categoryName} category`,
+                description: `Просмотр команд в ${categoryName} категория`,
                 value: category,
             };
         }),
     ];
 
     const embed = createEmbed({
-        title: "🤖 TitanBot Help Center",
-        description: "Your all-in-one Discord companion for moderation, economy, fun, and server management.\n\nSelect a category below to explore our powerful commands:",
+        title: "🤖 𝙀𝙫𝙤 Справочный центр",
+        description: "Ваш универсальный партнер в Discord для модерации, экономии, развлечения и управления сервером.\n\n Выберите категорию ниже, чтобы ознакомиться с нашими командами:",
         color: 'primary'
     });
 
     embed.addFields(
         {
-            name: "🛡️ **Moderation**",
-            value: "Server moderation, user management, and enforcement tools",
+            name: "🛡️ **Модерация**",
+            value: "Модерация сервера, управление пользователями и инструменты обеспечения соблюдения",
             inline: true
         },
         {
-            name: "💰 **Economy**",
-            value: "Currency system, shops, and virtual economy",
+            name: "💰 **Экономика**",
+            value: "Валютная система, магазины и виртуальная экономика",
             inline: true
         },
         {
-            name: "🎮 **Fun**",
-            value: "Games, entertainment, and interactive commands",
+            name: "🎮 **Веселье**",
+            value: "Игры, развлечения и интерактивные команды",
             inline: true
         },
         {
-            name: "📊 **Leveling**",
-            value: "User levels, XP system, and progression tracking",
+            name: "📊 **Уровни**",
+            value: "Уровни пользователей, система XP и отслеживание прогресса",
             inline: true
         },
         {
-            name: "🎫 **Tickets**",
-            value: "Support ticket system for server management",
+            name: "🎫 **Тикеты**",
+            value: "Система тикетов поддержки для управления сервером",
             inline: true
         },
         {
-            name: "🎉 **Giveaways**",
-            value: "Automated giveaway management and distribution",
+            name: "🎉 **Розыгрыши**",
+            value: "Автоматизированное управление раздачей подарков и их распространение",
             inline: true
         },
         {
-            name: "👋 **Welcome**",
-            value: "Member welcome messages and onboarding",
+            name: "👋 **Добро пожаловать**",
+            value: "Приветственные сообщения участникам и регистрация",
             inline: true
         },
         {
-            name: "🎂 **Birthdays**",
-            value: "Birthday tracking and celebration features",
+            name: "🎂 **Дни рождения**",
+            value: "Функции отслеживания дня рождения и празднования",
             inline: true
         },
         {
-            name: "🔧 **Utilities**",
-            value: "Useful tools and server utilities",
+            name: "🔧 **Конфигурация**",
+            value: "Команды управления конфигурацией сервера и бота",
             inline: true
         }
     );
 
     embed.setFooter({
-        text: "Made with ❤️"
+        text: "Снова в строю  ❤️"
     });
     embed.setTimestamp();
 
     const bugReportButton = new ButtonBuilder()
         .setCustomId(BUG_REPORT_BUTTON_ID)
-        .setLabel("Report Bug")
+        .setLabel("Сообщить об ошибке")
         .setStyle(ButtonStyle.Danger);
 
     const supportButton = new ButtonBuilder()
-        .setLabel("Support Server")
-        .setURL("https://discord.gg/QnWNz2dKCE")
+        .setLabel("Дискорд сервер")
+        .setURL("https://discord.gg/TYZAPe8y6J")
         .setStyle(ButtonStyle.Link);
 
     const touchpointButton = new ButtonBuilder()
-        .setLabel("Learn from Touchpoint")
-        .setURL("https://www.youtube.com/@TouchDisc")
+        .setLabel("Ютубе")
+        .setURL("https://www.youtube.com/@strinf1596")
         .setStyle(ButtonStyle.Link);
 
     const selectRow = createSelectMenu(
         CATEGORY_SELECT_ID,
-        "Select to view the commands",
+        "Выберите, чтобы просмотреть команды",
         options,
     );
 
@@ -171,7 +171,7 @@ export const helpBackButton = {
             });
         } catch (error) {
             if (error?.code === 40060 || error?.code === 10062) {
-                logger.warn('Help back button interaction already acknowledged or expired.', {
+                logger.warn('Отображает меню справки со всеми доступными командами.', {
                     event: 'interaction.help.button.unavailable',
                     errorCode: String(error.code),
                     customId: interaction.customId,
@@ -189,25 +189,24 @@ export const helpBugReportButton = {
     name: BUG_REPORT_BUTTON_ID,
     async execute(interaction, client) {
         const githubButton = new ButtonBuilder()
-            .setLabel('🐛 Report Bug on GitHub')
+            .setLabel('🐛 Баг репорт')
             .setStyle(ButtonStyle.Link)
-            .setURL('https://github.com/codebymitch/TitanBot/issues');
+            .setURL('https://discord.gg/TYZAPe8y6J');
 
         const bugRow = new ActionRowBuilder().addComponents(githubButton);
 
         const bugReportEmbed = createEmbed({
-            title: '🐛 Bug Report',
-            description: 'Found a bug? Please report it on our GitHub Issues page!\n\n' +
-                '**When reporting a bug, please include:**\n' +
-                '• 📝 Detailed description of the issue\n' +
-                '• 📋 Steps to reproduce the problem\n' +
-                '• 📸 Screenshots if applicable\n' +
-                '• 💻 Your bot version and environment\n\n' +
-                'This helps us fix issues faster and more effectively!',
+            title: '🐛 Баг репорт',
+            description: 'Нашли ошибку? Пожалуйста, сообщите о ней на нашей странице проблем!\n\n' +
+                '**Сообщая об ошибке, пожалуйста, укажите:**\n' +
+                '• 📝 Подробное описание проблемы\n' +
+                '• 📋 Шаги по воспроизведению проблемы\n' +
+                '• 📸 Скриншоты, если применимо\n' +
+                'Это помогает нам устранять неполадки быстрее и эффективнее!',
             color: 'error'
         });
         bugReportEmbed.setFooter({
-            text: 'TitanBot Bug Reporting System',
+            text: 'Система сообщений об ошибках',
             iconURL: client.user.displayAvatarURL()
         });
         bugReportEmbed.setTimestamp();
@@ -280,7 +279,7 @@ export const helpPaginationButton = {
             await interaction.editReply({ embeds, components });
         } catch (error) {
             if (error?.code === 40060 || error?.code === 10062) {
-                logger.warn('Help pagination interaction already acknowledged or expired.', {
+                logger.warn('Взаимодействие с разбивкой по страницам справки уже подтверждено или срок действия которого истек.', {
                     event: 'interaction.help.pagination.unavailable',
                     errorCode: String(error.code),
                     customId: interaction.customId,
