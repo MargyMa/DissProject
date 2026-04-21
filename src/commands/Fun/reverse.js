@@ -8,11 +8,11 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 export default {
     data: new SlashCommandBuilder()
     .setName("reverse")
-    .setDescription("Writes your text backwards.")
+    .setDescription("Записывает ваш текст задом наперед.")
     .addStringOption((option) =>
       option
         .setName("text")
-        .setDescription("The text to reverse.")
+        .setDescription("Текст, который нужно перевернуть.")
         .setRequired(true)
         .setMaxLength(1000),
     ),
@@ -25,9 +25,9 @@ export default {
       
       if (!originalText || originalText.trim().length === 0) {
         throw new TitanBotError(
-          'Empty text provided to reverse command',
+          'Пустой текст для обратной команды',
           ErrorTypes.USER_INPUT,
-          'Please provide some text to reverse!'
+          'Пожалуйста, введите текст для реверсивного поиска!'
         );
       }
 
@@ -36,14 +36,14 @@ export default {
       const reversedText = sanitizedText.split("").reverse().join("");
 
       const embed = successEmbed(
-        "Backwards Text",
-        `Original: **${sanitizedText}**\nReversed: **${reversedText}**`,
+        "Обратный текст",
+        `Оригинал: **${sanitizedText}**\nОбратный: **${reversedText}**`,
       );
 
       await InteractionHelper.safeReply(interaction, { embeds: [embed] });
-      logger.debug(`Reverse command executed by user ${interaction.user.id} in guild ${interaction.guildId}`);
+      logger.debug(`Обратная команда, выполняемая пользователем ${interaction.user.id} в гильдии ${interaction.guildId}`);
     } catch (error) {
-      logger.error('Reverse command error:', error);
+      logger.error('Ошибка обратной команды:', error);
       await handleInteractionError(interaction, error, {
         commandName: 'reverse',
         source: 'reverse_command'
