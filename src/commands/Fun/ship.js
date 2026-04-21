@@ -18,18 +18,18 @@ function stringToHash(str) {
 export default {
     data: new SlashCommandBuilder()
     .setName("ship")
-    .setDescription("Calculate the compatibility score between two people.")
+    .setDescription("Рассчитайте уровень совместимости двух людей.")
     .addStringOption((option) =>
       option
         .setName("name1")
-        .setDescription("The first name or user.")
+        .setDescription("Первый ник пользователя.")
         .setRequired(true)
         .setMaxLength(100),
     )
     .addStringOption((option) =>
       option
         .setName("name2")
-        .setDescription("The second name or user.")
+        .setDescription("Второй ник пользователя.")
         .setRequired(true)
         .setMaxLength(100),
     ),
@@ -45,9 +45,9 @@ export default {
       
       if (!name1Raw || name1Raw.trim().length === 0 || !name2Raw || name2Raw.trim().length === 0) {
         throw new TitanBotError(
-          'Empty names provided to ship command',
+          'Пустые имена, предоставленные в команде',
           ErrorTypes.USER_INPUT,
-          'Please provide valid names for both people!'
+          'Пожалуйста, укажите полные имена обоих людей!'
         );
       }
 
@@ -58,8 +58,8 @@ export default {
       
       if (name1.toLowerCase() === name2.toLowerCase()) {
         const embed = warningEmbed(
-          "💖 Ship Score",
-          `**${name1}** can't be shipped with themselves! Please choose two different people.`
+          "💖 Оценка совместимости",
+          `**${name1}** не могут быть доставлены сами по себе! Пожалуйста, выберите двух разных людей.`
         );
         return await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
       }
@@ -70,17 +70,17 @@ export default {
 
       let description;
       if (score === 100) {
-        description = "Soulmates! It's destiny, they belong together!";
+        description = "Родственные души! Это судьба, они созданы друг для друга!";
       } else if (score >= 80) {
-        description = "A perfect match! Get the wedding bells ready!";
+        description = "Идеальная пара! Готовьте свадебные колокольчики!";
       } else if (score >= 60) {
-        description = "Solid chemistry. Definitely worth exploring!";
+        description = "Сплошная химия. Определенно стоит изучить!";
       } else if (score >= 40) {
-        description = "Just friends status. Maybe with time?";
+        description = "Статус «Просто друзья». Может быть, со временем?";
       } else if (score >= 20) {
-        description = "It's a struggle. They might need space.";
+        description = "Это непросто. Им может понадобиться личное пространство.";
       } else {
-        description = "Zero compatibility. Run for the hills!";
+        description = "Нулевая совместимость. Бегите без оглядки!";
       }
 
       const progressBar =
@@ -88,14 +88,14 @@ export default {
         "░".repeat(10 - Math.floor(score / 10));
 
       const embed = successEmbed(
-        `💖 Ship Score: ${name1} vs ${name2}`,
-        `Compatibility: **${score}%**\n\n\`${progressBar}\`\n\n*${description}*`,
+        `💖 Оценка совместимости: ${name1} vs ${name2}`,
+        `Совместимость: **${score}%**\n\n\`${progressBar}\`\n\n*${description}*`,
       );
 
       await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
-      logger.debug(`Ship command executed by user ${interaction.user.id} in guild ${interaction.guildId}`);
+      logger.debug(`Команда отправки, выполняемая пользователем ${interaction.user.id} в гильдии ${interaction.guildId}`);
     } catch (error) {
-      logger.error('Ship command error:', error);
+      logger.error('Ошибка командования кораблем:', error);
       await handleInteractionError(interaction, error, {
         commandName: 'ship',
         source: 'ship_command'
