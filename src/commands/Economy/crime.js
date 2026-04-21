@@ -12,11 +12,11 @@ const FAILURE_RATE = 0.4;
 const JAIL_TIME = 2 * 60 * 60 * 1000;
 
 const CRIME_TYPES = [
-    { name: "Карманные кражи", min: 100, max: 500, risk: 0.3 },
-    { name: "Кража со взломом", min: 300, max: 1000, risk: 0.4 },
-    { name: "Ограбление банка", min: 1000, max: 5000, risk: 0.6 },
-    { name: "Кража произведений искусства", min: 2000, max: 10000, risk: 0.7 },
-    { name: "Киберпреступность", min: 5000, max: 20000, risk: 0.8 },
+    { name: "pickpocketing", min: 100, max: 500, risk: 0.3 },
+    { name: "burglary", min: 300, max: 1000, risk: 0.4 },
+    { name: "bank-heist", min: 1000, max: 5000, risk: 0.6 },
+    { name: "art-theft", min: 2000, max: 10000, risk: 0.7 },
+    { name: "cybercrime", min: 5000, max: 20000, risk: 0.8 },
 ];
 
 export default {
