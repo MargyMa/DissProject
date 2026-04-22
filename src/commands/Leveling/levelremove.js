@@ -14,17 +14,17 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 export default {
   data: new SlashCommandBuilder()
     .setName('levelremove')
-    .setDescription('Remove levels from a user')
+    .setDescription('Удаление уровней у пользователя')
     .addUserOption((option) =>
       option
         .setName('user')
-        .setDescription('The user to remove levels from')
+        .setDescription('Пользователь удаляет уровни')
         .setRequired(true)
     )
     .addIntegerOption((option) =>
       option
         .setName('levels')
-        .setDescription('Number of levels to remove')
+        .setDescription('Количество уровней, которые нужно удалить')
         .setRequired(true)
         .setMinValue(1)
     )
@@ -46,7 +46,7 @@ export default {
       const hasPermission = await checkUserPermissions(
         interaction,
         PermissionFlagsBits.ManageGuild,
-        'You need ManageGuild permission to use this command.'
+        'Для использования этой команды вам необходимо разрешение ManageGuild.'
       );
       if (!hasPermission) return;
 
@@ -56,7 +56,7 @@ export default {
           embeds: [
             new EmbedBuilder()
               .setColor('#f1c40f')
-              .setDescription('The leveling system is currently disabled on this server.')
+              .setDescription('На этом сервере система повышения уровня в настоящее время отключена.')
           ],
           flags: MessageFlags.Ephemeral
         });
@@ -70,9 +70,9 @@ export default {
       const member = await interaction.guild.members.fetch(targetUser.id).catch(() => null);
       if (!member) {
         throw new TitanBotError(
-          `User ${targetUser.id} not found in this guild`,
+          `Пользователь ${targetUser.id} не найден в этой гильдии`,
           ErrorTypes.USER_INPUT,
-          'The specified user is not in this server.'
+          'Указанный пользователь не зарегистрирован на этом сервере.'
         );
       }
 
@@ -80,9 +80,9 @@ export default {
       const userData = await getUserLevelData(client, interaction.guildId, targetUser.id);
       if (userData.level === 0) {
         throw new TitanBotError(
-          `User ${targetUser.id} is already at minimum level`,
+          `Пользователь ${targetUser.id} находится уже на минимальном уровне`,
           ErrorTypes.VALIDATION,
-          `${targetUser.tag} is already at level 0 and cannot have levels removed.`
+          `${targetUser.tag} уже имеет нулевой уровень и не может быть понижен.`
         );
       }
 
@@ -92,8 +92,8 @@ export default {
       await InteractionHelper.safeEditReply(interaction, {
         embeds: [
           createEmbed({
-            title: '✅ Levels Removed',
-            description: `Successfully removed ${levelsToRemove} levels from ${targetUser.tag}.\n**New Level:** ${updatedData.level}`,
+            title: '✅ Удаленные уровни',
+            description: `Успешно удален ${levelsToRemove} уровни от ${targetUser.tag}.\n**Новый уровень:** ${updatedData.level}`,
             color: 'success'
           })
         ]
