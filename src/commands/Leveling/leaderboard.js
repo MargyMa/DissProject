@@ -12,7 +12,7 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 export default {
   data: new SlashCommandBuilder()
     .setName('leaderboard')
-    .setDescription("Shows the server's level leaderboard")
+    .setDescription("Отображает таблицу лидеров по уровням сервера")
     .setDMPermission(false),
   category: 'Leveling',
 
@@ -33,7 +33,7 @@ export default {
           embeds: [
             new EmbedBuilder()
               .setColor('#f1c40f')
-              .setDescription('The leveling system is currently disabled on this server.')
+              .setDescription('На этом сервере система повышения уровня в настоящее время отключена.')
           ],
           flags: MessageFlags.Ephemeral
         });
@@ -44,16 +44,16 @@ export default {
 
       if (leaderboard.length === 0) {
         throw new TitanBotError(
-          'No leaderboard data found',
+          'Данные таблицы лидеров не найдены',
           ErrorTypes.DATABASE,
-          'No level data found yet. Start chatting to gain XP!'
+          'Данные об уровне пока не найдены. Начните общаться, чтобы получить опыт!'
         );
       }
 
       const embed = new EmbedBuilder()
-        .setTitle('🏆 Level Leaderboard')
+        .setTitle('🏆 Таблица лидеров уровней')
         .setColor('#2ecc71')
-        .setDescription("Top 10 most active members in this server:")
+        .setDescription("10 самых активных участников этого сервера:")
         .setTimestamp();
 
       const leaderboardText = await Promise.all(
@@ -77,7 +77,7 @@ export default {
       );
 
       embed.addFields({
-        name: 'Rankings',
+        name: 'Ранги',
         value: leaderboardText.join('\n')
       });
 
