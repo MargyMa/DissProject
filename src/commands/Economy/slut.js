@@ -8,36 +8,36 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 const SLUT_COOLDOWN = 45 * 60 * 1000;
 
 const SLUT_ACTIVITIES = [
-    { name: "Cam Stream", min: 120, max: 450, risk: 0.2 },
-    { name: "Private Dance Session", min: 220, max: 700, risk: 0.25 },
-    { name: "After-Hours Club Host", min: 320, max: 900, risk: 0.3 },
-    { name: "VIP Companion Booking", min: 550, max: 1400, risk: 0.35 },
-    { name: "Exclusive Livestream", min: 850, max: 2200, risk: 0.4 },
+    { name: "Стрим с камерой", min: 120, max: 450, risk: 0.2 },
+    { name: "Сеанс приватного танца", min: 220, max: 700, risk: 0.25 },
+    { name: "Ведущий клуба в нерабочее время", min: 320, max: 900, risk: 0.3 },
+    { name: "Бронирование VIP-спутника", min: 550, max: 1400, risk: 0.35 },
+    { name: "Эксклюзивная прямая трансляция", min: 850, max: 2200, risk: 0.4 },
 ];
 
 const POSITIVE_OUTCOMES = [
-    "Your stream blew up and tips poured in.",
-    "A VIP booking paid far above average.",
-    "Your after-hours shift was packed and profitable.",
-    "Premium requests came through and your payout jumped.",
+    "Ваш стрим набрал популярность, и посыпались чаевые.",
+    "VIP-бронирование обошлось намного дороже обычного.",
+    "Ваша ночная смена прошла успешно и принесла прибыль.",
+    "Пришли запросы на премиум-подписку, и ваша выплата увеличилась.",
 ];
 
 const FINE_OUTCOMES = [
-    "Venue security issued a compliance fine.",
-    "A moderation strike triggered a platform fee.",
-    "You were flagged and had to pay a penalty.",
+    "Служба безопасности объекта выписала штраф за несоблюдение требований.",
+    "Забастовка модераторов привела к введению платы за использование платформы.",
+    "Вас побили, и вам пришлось заплатить штраф.",
 ];
 
 const ROBBED_OUTCOMES = [
-    "A fake buyer chargeback wiped part of your earnings.",
-    "A scam booking cleaned out a chunk of your cash.",
-    "You got baited by a fraud account and lost money.",
+    "Фальшивый покупатель вернул вам часть денег.",
+    "Из-за мошенников вы потеряли часть своих денег.",
+    "Вы попались на удочку мошенников и потеряли деньги.",
 ];
 
 const LOSS_OUTCOMES = [
-    "The set flopped and you had to cover operating costs.",
-    "You burned budget on prep and made no return.",
-    "The shift went sideways and left you in the red.",
+    "Сериал провалился, и вам пришлось покрывать операционные расходы.",
+    "Вы потратили бюджет на подготовку и ничего не получили взамен.",
+    "Сдвиг произошел в сторону ухудшения, и вы оказались в минусе.",
 ];
 
 function randomInt(min, max) {
@@ -60,7 +60,7 @@ function resolveOutcome(activity, wallet) {
             type: 'payout',
             delta: amount,
             message: randomChoice(POSITIVE_OUTCOMES),
-            title: `💰 ${activity.name} - Payout`
+            title: `💰 ${activity.name} - Выплата`
         };
     }
 
@@ -74,7 +74,7 @@ function resolveOutcome(activity, wallet) {
             type: 'fine',
             delta: -amount,
             message: randomChoice(FINE_OUTCOMES),
-            title: `🚨 ${activity.name} - Fined`
+            title: `🚨 ${activity.name} - Оштрафованный`
         };
     }
 
@@ -86,7 +86,7 @@ function resolveOutcome(activity, wallet) {
             type: 'robbed',
             delta: -amount,
             message: randomChoice(ROBBED_OUTCOMES),
-            title: `🕵️ ${activity.name} - Robbed`
+            title: `🕵️ ${activity.name} - Ограбленный`
         };
     }
 
@@ -97,14 +97,14 @@ function resolveOutcome(activity, wallet) {
         type: 'loss',
         delta: -amount,
         message: randomChoice(LOSS_OUTCOMES),
-        title: `❌ ${activity.name} - Loss`
+        title: `❌ ${activity.name} - Потеря`
     };
 }
 
 export default {
     data: new SlashCommandBuilder()
         .setName('slut')
-        .setDescription('Take a risky provocative job for random payout or loss'),
+        .setDescription('Согласитесь на рискованную провокационную работу ради случайной выплаты или проигрыша'),
 
     execute: withErrorHandling(async (interaction, config, client) => {
         const deferred = await InteractionHelper.safeDefer(interaction);
@@ -120,9 +120,9 @@ export default {
 
             if (!userData) {
                 throw createError(
-                    "Failed to load economy data for slut command",
+                    "Не удалось загрузить экономические данные для команды slut",
                     ErrorTypes.DATABASE,
-                    "Failed to load your economy data. Please try again later.",
+                    "Не удалось загрузить данные о вашей экономике. Пожалуйста, повторите попытку позже.",
                     { userId, guildId }
                 );
             }
@@ -132,9 +132,9 @@ export default {
             if (now - lastSlut < SLUT_COOLDOWN) {
                 const remainingTime = lastSlut + SLUT_COOLDOWN - now;
                 throw createError(
-                    "Slut cooldown active",
+                    "Активный кулдаун slut",
                     ErrorTypes.RATE_LIMIT,
-                    `You need to wait before you can work again! Try again in **${Math.ceil(remainingTime / 60000)}** minutes.`,
+                    `Вам нужно подождать, прежде чем вы снова сможете работать! Попробуйте еще раз **${Math.ceil(remainingTime / 60000)}** минут.`,
                     { timeRemaining: remainingTime, cooldownType: 'slut' }
                 );
             }
@@ -169,11 +169,11 @@ export default {
             const amountLabel = `${outcome.delta >= 0 ? '+' : '-'}$${Math.abs(outcome.delta).toLocaleString()}`;
             const summaryLines = [
                 `${outcome.message}`,
-                `💸 **Net Result:** ${amountLabel}`,
-                `💳 **Current Balance:** $${userData.wallet.toLocaleString()}`,
-                `📊 **Total Sessions:** ${userData.totalSluts}`,
-                `💵 **Total Earned:** $${(userData.totalSlutEarnings || 0).toLocaleString()}`,
-                `🧾 **Total Lost:** $${(userData.totalSlutLosses || 0).toLocaleString()}`
+                `💸 **Чистый результат:** ${amountLabel}`,
+                `💳 **Текущий баланс:** $${userData.wallet.toLocaleString()}`,
+                `📊 **Общее количество сеансов:** ${userData.totalSluts}`,
+                `💵 **Общая сумма заработанных средств:** $${(userData.totalSlutEarnings || 0).toLocaleString()}`,
+                `🧾 **Всего потеряно:** $${(userData.totalSlutLosses || 0).toLocaleString()}`
             ];
 
             const embed = createEmbed({
