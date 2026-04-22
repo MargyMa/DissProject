@@ -32,45 +32,45 @@ function buildDashboardEmbed(cfg, guild) {
     const msgPreview = `\`${rawMsg.length > 60 ? rawMsg.substring(0, 60) + '…' : rawMsg}\``;
 
     return new EmbedBuilder()
-        .setTitle('📊 Leveling System Dashboard')
-        .setDescription(`Manage leveling settings for **${guild.name}**.\nSelect an option below to modify a setting.`)
+        .setTitle('📊 Приборная панель системы уровней')
+        .setDescription(`Управление настройками уровней для **${guild.name}**.\nВыберите один из вариантов ниже, чтобы изменить настройку.`)
         .setColor(getColor('info'))
         .addFields(
-            { name: '📢 Level-up Channel', value: channel, inline: true },
-            { name: '⚙️ System Status', value: cfg.enabled ? '✅ **Enabled**' : '❌ **Disabled**', inline: true },
-            { name: '📣 Announcements', value: cfg.announceLevelUp !== false ? '✅ **Enabled**' : '❌ **Disabled**', inline: true },
-            { name: '🎲 XP per Message', value: `\`${xpMin} – ${xpMax}\``, inline: true },
-            { name: '⏱️ XP Cooldown', value: `\`${cooldown}s\``, inline: true },
+            { name: '📢 Канал повышения уровня', value: channel, inline: true },
+            { name: '⚙️ Состояние системы', value: cfg.enabled ? '✅ **Включенный**' : '❌ **Выключенный**', inline: true },
+            { name: '📣 Объявления', value: cfg.announceLevelUp !== false ? '✅ **Включенный**' : '❌ **Выключенный**', inline: true },
+            { name: '🎲 Количество опыта за сообщение', value: `\`${xpMin} – ${xpMax}\``, inline: true },
+            { name: '⏱️ Время восстановления опыта', value: `\`${cooldown}s\``, inline: true },
             { name: '\u200B', value: '\u200B', inline: true },
-            { name: '💬 Level-up Message', value: msgPreview, inline: false },
+            { name: '💬 Сообщение о повышении уровня', value: msgPreview, inline: false },
         )
-        .setFooter({ text: 'Dashboard closes after 10 minutes of inactivity' })
+        .setFooter({ text: 'Панель управления закрывается через 10 минут бездействия' })
         .setTimestamp();
 }
 
 function buildSelectMenu(guildId) {
     return new StringSelectMenuBuilder()
         .setCustomId(`level_cfg_${guildId}`)
-        .setPlaceholder('Select a setting to configure...')
+        .setPlaceholder('Выберите параметр для настройки...')
         .addOptions(
             new StringSelectMenuOptionBuilder()
-                .setLabel('Change Level-up Channel')
-                .setDescription('Set the channel where level-up notifications are sent')
+                .setLabel('Измените канал повышения уровня')
+                .setDescription('Выберите канал, на который будут отправляться уведомления об улучшении уровня')
                 .setValue('channel')
                 .setEmoji('📢'),
             new StringSelectMenuOptionBuilder()
-                .setLabel('Edit Level-up Message')
-                .setDescription('Customise the message shown when a user levels up')
+                .setLabel('Редактировать сообщение о повышении уровня')
+                .setDescription('Настройте сообщение, которое отображается при повышении уровня пользователя')
                 .setValue('message')
                 .setEmoji('💬'),
             new StringSelectMenuOptionBuilder()
-                .setLabel('Set XP Range')
-                .setDescription('Set the minimum and maximum XP rewarded per message')
+                .setLabel('Установите диапазон опыта')
+                .setDescription('Установите минимальное и максимальное количество очков опыта, начисляемых за сообщение')
                 .setValue('xp_range')
                 .setEmoji('🎲'),
             new StringSelectMenuOptionBuilder()
-                .setLabel('Set XP Cooldown')
-                .setDescription('Seconds between XP grants for the same user')
+                .setLabel('Установите время восстановления опыта')
+                .setDescription('Время между выдачей опыта одному и тому же пользователю')
                 .setValue('xp_cooldown')
                 .setEmoji('⏱️'),
         );
@@ -82,13 +82,13 @@ function buildButtonRow(cfg, guildId, disabled = false) {
     return new ActionRowBuilder().addComponents(
         new ButtonBuilder()
             .setCustomId(`level_cfg_toggle_announce_${guildId}`)
-            .setLabel('Announcements')
+            .setLabel('Объявления')
             .setStyle(announceOn ? ButtonStyle.Success : ButtonStyle.Danger)
             .setEmoji('📣')
             .setDisabled(disabled),
         new ButtonBuilder()
             .setCustomId(`level_cfg_toggle_system_${guildId}`)
-            .setLabel('Leveling')
+            .setLabel('Уровни')
             .setStyle(systemOn ? ButtonStyle.Success : ButtonStyle.Danger)
             .setEmoji('⚡')
             .setDisabled(disabled),
@@ -118,9 +118,9 @@ export default {
 
             if (!cfg.configured) {
                 throw new TitanBotError(
-                    'Leveling system not configured',
+                    'Система уровней не настроена',
                     ErrorTypes.CONFIGURATION,
-                    'The leveling system has not been set up yet. Run `/level setup` first to configure it.',
+                    'Система уровней еще не настроена. Сначала запустите команду `/level setup`, чтобы настроить ее.',
                 );
             }
 
@@ -158,15 +158,15 @@ export default {
                     }
                 } catch (error) {
                     if (error instanceof TitanBotError) {
-                        logger.debug(`Leveling config validation error: ${error.message}`);
+                        logger.debug(`Ошибка проверки конфигурации уровней: ${error.message}`);
                     } else {
-                        logger.error('Unexpected leveling dashboard error:', error);
+                        logger.error('Неожиданная ошибка панели управления уровней:', error);
                     }
 
                     const errorMessage =
                         error instanceof TitanBotError
-                            ? error.userMessage || 'An error occurred while processing your selection.'
-                            : 'An unexpected error occurred while updating the configuration.';
+                            ? error.userMessage || 'Произошла ошибка при обработке вашего выбора.'
+                            : 'Произошла непредвиденная ошибка при обновлении конфигурации.';
 
                     if (!selectInteraction.replied && !selectInteraction.deferred) {
                         await selectInteraction.deferUpdate().catch(() => {});
@@ -206,8 +206,8 @@ export default {
                     await btnInteraction.followUp({
                         embeds: [
                             successEmbed(
-                                '✅ Announcements Updated',
-                                `Level-up announcements are now **${cfg.announceLevelUp ? 'enabled' : 'disabled'}**.`,
+                                '✅ Обновленные объявления',
+                                `Объявления о повышении уровня уже доступны **${cfg.announceLevelUp ? 'enabled' : 'disabled'}**.`,
                             ),
                         ],
                         flags: MessageFlags.Ephemeral,
@@ -219,8 +219,8 @@ export default {
                     await btnInteraction.followUp({
                         embeds: [
                             successEmbed(
-                                '✅ System Updated',
-                                `The leveling system is now **${cfg.enabled ? 'enabled' : 'disabled'}**.${!cfg.enabled ? '\nUsers will not earn XP until the system is re-enabled.' : ''}`,
+                                '✅ Обновлена система',
+                                `Система прокачки теперь доступна **${cfg.enabled ? 'enabled' : 'disabled'}**.${!cfg.enabled ? '\nПользователи не будут получать опыт до тех пор, пока система не будет снова доступна.' : ''}`,
                             ),
                         ],
                         flags: MessageFlags.Ephemeral,
@@ -234,8 +234,8 @@ export default {
                 if (reason === 'time') {
                     btnCollector.stop();
                     const timeoutEmbed = new EmbedBuilder()
-                        .setTitle('⏰ Dashboard Timed Out')
-                        .setDescription('This dashboard has been closed due to inactivity. Please run the command again to continue.')
+                        .setTitle('⏰ Время ожидания панели мониторинга истекло')
+                        .setDescription('Эта панель управления была закрыта из-за отсутствия активности. Пожалуйста, выполните команду еще раз, чтобы продолжить.')
                         .setColor(getColor('error'));
                     
                     await InteractionHelper.safeEditReply(interaction, {
@@ -248,8 +248,8 @@ export default {
             btnCollector.on('end', async (collected, reason) => {
                 if (reason === 'time') {
                     const timeoutEmbed = new EmbedBuilder()
-                        .setTitle('⏰ Dashboard Timed Out')
-                        .setDescription('This dashboard has been closed due to inactivity. Please run the command again to continue.')
+                        .setTitle('⏰ Время ожидания панели мониторинга истекло')
+                        .setDescription('Эта панель управления была закрыта из-за отсутствия активности. Пожалуйста, выполните команду еще раз, чтобы продолжить.')
                         .setColor(getColor('error'));
                     
                     await InteractionHelper.safeEditReply(interaction, {
@@ -262,9 +262,9 @@ export default {
             if (error instanceof TitanBotError) throw error;
             logger.error('Unexpected error in level_dashboard:', error);
             throw new TitanBotError(
-                `Level dashboard failed: ${error.message}`,
+                `Сбой панели управления уровнем: ${error.message}`,
                 ErrorTypes.UNKNOWN,
-                'Failed to open the leveling dashboard.',
+                'Не удалось открыть панель управления прокачкой.',
             );
         }
     },
@@ -277,7 +277,7 @@ async function handleChannel(selectInteraction, rootInteraction, cfg, guildId, c
 
     const channelSelect = new ChannelSelectMenuBuilder()
         .setCustomId('level_cfg_channel')
-        .setPlaceholder('Select a text channel...')
+        .setPlaceholder('Выберите текстовый канал...')
         .addChannelTypes(ChannelType.GuildText)
         .setMaxValues(1);
 
@@ -286,9 +286,9 @@ async function handleChannel(selectInteraction, rootInteraction, cfg, guildId, c
     await selectInteraction.followUp({
         embeds: [
             new EmbedBuilder()
-                .setTitle('📢 Change Level-up Channel')
+                .setTitle('📢 Измените канал повышения уровня')
                 .setDescription(
-                    `**Current:** ${cfg.levelUpChannel ? `<#${cfg.levelUpChannel}>` : '`Not set`'}\n\nSelect the channel where level-up notifications will be sent.`,
+                    `**Текущий:** ${cfg.levelUpChannel ? `<#${cfg.levelUpChannel}>` : '`Не установлен`'}\n\nВыберите канал, на который будут приходить уведомления об улучшении уровня.`,
                 )
                 .setColor(getColor('info')),
         ],
@@ -312,8 +312,8 @@ async function handleChannel(selectInteraction, rootInteraction, cfg, guildId, c
             await chanInteraction.followUp({
                 embeds: [
                     errorEmbed(
-                        'Missing Permissions',
-                        `I need **SendMessages** and **EmbedLinks** permissions in ${channel} to send level-up notifications.`,
+                        'Отсутствующие разрешения',
+                        `Мне нужны разрешения **SendMessages** и **EmbedLinks** в ${channel} для отправки уведомлений об повышении уровня.`,
                     ),
                 ],
                 flags: MessageFlags.Ephemeral,
@@ -327,8 +327,8 @@ async function handleChannel(selectInteraction, rootInteraction, cfg, guildId, c
         await chanInteraction.followUp({
             embeds: [
                 successEmbed(
-                    '✅ Channel Updated',
-                    `Level-up notifications will now be sent in ${channel}.`,
+                    '✅ Канал обновлен',
+                    `Теперь уведомления об улучшении уровня будут приходить в ${channel}.`,
                 ),
             ],
             flags: MessageFlags.Ephemeral,
@@ -342,7 +342,7 @@ async function handleChannel(selectInteraction, rootInteraction, cfg, guildId, c
             selectInteraction
                 .followUp({
                     embeds: [
-                        errorEmbed('Timed Out', 'No channel was selected. The setting was not changed.'),
+                        errorEmbed('ТаймАут', 'Канал не выбран. Настройка не изменена.'),
                     ],
                     flags: MessageFlags.Ephemeral,
                 })
@@ -361,13 +361,13 @@ async function handleMessage(selectInteraction, rootInteraction, cfg, guildId, c
             new ActionRowBuilder().addComponents(
                 new TextInputBuilder()
                     .setCustomId('message_input')
-                    .setLabel('Message ({user} and {level} are available)')
+                    .setLabel('Сообщение ({user} и {level} доступны)')
                     .setStyle(TextInputStyle.Paragraph)
-                    .setValue(cfg.levelUpMessage || '{user} has leveled up to level {level}!')
+                    .setValue(cfg.levelUpMessage || '{user} повысил уровень до {level}!')
                     .setMaxLength(500)
                     .setMinLength(1)
                     .setRequired(true)
-                    .setPlaceholder('{user} has leveled up to level {level}!'),
+                    .setPlaceholder('{user} повысил уровень до {level}!'),
             ),
         );
 
@@ -387,7 +387,7 @@ async function handleMessage(selectInteraction, rootInteraction, cfg, guildId, c
 
     if (!newMessage.includes('{user}') && !newMessage.includes('{level}')) {
         logger.warn(
-            `Level-up message set without {user} or {level} placeholders in guild ${guildId}`,
+            `Набор сообщений для повышения уровня {user} или {level} заполнители в гильдии ${guildId}`,
         );
     }
 
@@ -399,8 +399,8 @@ async function handleMessage(selectInteraction, rootInteraction, cfg, guildId, c
     await submitted.reply({
         embeds: [
             successEmbed(
-                '✅ Message Updated',
-                `Level-up message saved.\n**Preview:** ${preview}`,
+                '✅ Сообщение обновлено',
+                `Сохранено сообщение о повышении уровня.\n**Предварительный просмотр:** ${preview}`,
             ),
         ],
         flags: MessageFlags.Ephemeral,
@@ -417,12 +417,12 @@ async function handleXpRange(selectInteraction, rootInteraction, cfg, guildId, c
 
     const modal = new ModalBuilder()
         .setCustomId('level_cfg_xp_range')
-        .setTitle('Set XP Range per Message')
+        .setTitle('Установите диапазон XP для каждого сообщения')
         .addComponents(
             new ActionRowBuilder().addComponents(
                 new TextInputBuilder()
                     .setCustomId('xp_min_input')
-                    .setLabel('Minimum XP (1–500)')
+                    .setLabel('Минимальный опыт (1–500)')
                     .setStyle(TextInputStyle.Short)
                     .setValue(String(currentMin))
                     .setMaxLength(3)
@@ -433,7 +433,7 @@ async function handleXpRange(selectInteraction, rootInteraction, cfg, guildId, c
             new ActionRowBuilder().addComponents(
                 new TextInputBuilder()
                     .setCustomId('xp_max_input')
-                    .setLabel('Maximum XP (1–500)')
+                    .setLabel('Максимальный опыт (1–500)')
                     .setStyle(TextInputStyle.Short)
                     .setValue(String(currentMax))
                     .setMaxLength(3)
@@ -463,7 +463,7 @@ async function handleXpRange(selectInteraction, rootInteraction, cfg, guildId, c
     if (isNaN(newMin) || isNaN(newMax) || newMin < 1 || newMax < 1 || newMin > 500 || newMax > 500) {
         await submitted.reply({
             embeds: [
-                errorEmbed('Invalid Values', 'Both XP values must be whole numbers between **1** and **500**.'),
+                errorEmbed('Недопустимые значения', 'Оба значения Опыта должны быть целыми числами в диапазоне от **1** или **500**.'),
             ],
             flags: MessageFlags.Ephemeral,
         });
@@ -473,7 +473,7 @@ async function handleXpRange(selectInteraction, rootInteraction, cfg, guildId, c
     if (newMin > newMax) {
         await submitted.reply({
             embeds: [
-                errorEmbed('Invalid Range', 'Minimum XP cannot be greater than maximum XP.'),
+                errorEmbed('Недопустимый диапазон', 'Минимальное количество очков опыта не может превышать максимальное.'),
             ],
             flags: MessageFlags.Ephemeral,
         });
@@ -486,8 +486,8 @@ async function handleXpRange(selectInteraction, rootInteraction, cfg, guildId, c
     await submitted.reply({
         embeds: [
             successEmbed(
-                '✅ XP Range Updated',
-                `Users will now earn between **${newMin}** and **${newMax}** XP per message.`,
+                '✅ Обновлен ассортимент опыта',
+                `Теперь пользователи будут зарабатывать между **${newMin}** или **${newMax}** Количество очков за сообщение.`,
             ),
         ],
         flags: MessageFlags.Ephemeral,
@@ -501,12 +501,12 @@ async function handleXpRange(selectInteraction, rootInteraction, cfg, guildId, c
 async function handleXpCooldown(selectInteraction, rootInteraction, cfg, guildId, client) {
     const modal = new ModalBuilder()
         .setCustomId('level_cfg_cooldown')
-        .setTitle('Set XP Cooldown')
+        .setTitle('Установите время восстановления опыта')
         .addComponents(
             new ActionRowBuilder().addComponents(
                 new TextInputBuilder()
                     .setCustomId('cooldown_input')
-                    .setLabel('Cooldown in seconds (0–3600)')
+                    .setLabel('Время восстановления в секундах (0–3600)')
                     .setStyle(TextInputStyle.Short)
                     .setValue(String(cfg.xpCooldown ?? 60))
                     .setMaxLength(4)
@@ -535,8 +535,8 @@ async function handleXpCooldown(selectInteraction, rootInteraction, cfg, guildId
         await submitted.reply({
             embeds: [
                 errorEmbed(
-                    'Invalid Value',
-                    'Cooldown must be a whole number between **0** and **3600** seconds.',
+                    'Недопустимое значение',
+                    'Время восстановления должно быть целым числом в диапазоне от **0** или **3600** секунд.',
                 ),
             ],
             flags: MessageFlags.Ephemeral,
@@ -550,8 +550,8 @@ async function handleXpCooldown(selectInteraction, rootInteraction, cfg, guildId
     await submitted.reply({
         embeds: [
             successEmbed(
-                '✅ Cooldown Updated',
-                `XP cooldown set to **${newCooldown} second${newCooldown !== 1 ? 's' : ''}**.${newCooldown === 0 ? '\n> ⚠️ A cooldown of 0 means XP is granted on every message.' : ''}`,
+                '✅ Время восстановления обновлено',
+                `Время восстановления Опыта установлено на **${newCooldown} второй${newCooldown !== 1 ? 's' : ''}**.${newCooldown === 0 ? '\n> ⚠️ Время восстановления 0 означает, что опыт начисляется за каждое сообщение.' : ''}`,
             ),
         ],
         flags: MessageFlags.Ephemeral,
