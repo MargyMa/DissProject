@@ -12,11 +12,11 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 export default {
   data: new SlashCommandBuilder()
     .setName('rank')
-    .setDescription("Check your or another user's rank and level")
+    .setDescription("Проверьте свой ранг и уровень или уровень другого пользователя")
     .addUserOption((option) =>
       option
         .setName('user')
-        .setDescription('The user to check the rank of')
+        .setDescription('Пользователь проверяет свой рейтинг')
         .setRequired(false)
     )
     .setDMPermission(false),
@@ -38,7 +38,7 @@ export default {
           embeds: [
             new EmbedBuilder()
               .setColor('#f1c40f')
-              .setDescription('The leveling system is currently disabled on this server.')
+              .setDescription('На этом сервере система повышения уровня в настоящее время отключена.')
           ],
           flags: MessageFlags.Ephemeral
         });
@@ -52,9 +52,9 @@ export default {
 
       if (!member) {
         throw new TitanBotError(
-          `User ${targetUser.id} not found in guild`,
+          `Пользователь ${targetUser.id} не найден в гильдии`,
           ErrorTypes.USER_INPUT,
-          'Could not find the specified user in this server.'
+          'Не удалось найти указанного пользователя на этом сервере.'
         );
       }
 
@@ -75,22 +75,22 @@ export default {
         .setThumbnail(member.displayAvatarURL({ dynamic: true }))
         .addFields(
           {
-            name: '📊 Level',
+            name: '📊 Уровень',
             value: safeUserData.level.toString(),
             inline: true
           },
           {
-            name: '⭐ XP',
+            name: '⭐ Опыт',
             value: `${safeUserData.xp}/${xpNeeded}`,
             inline: true
           },
           {
-            name: '✨ Total XP',
+            name: '✨ Общий опыт',
             value: safeUserData.totalXp.toString(),
             inline: true
           },
           {
-            name: `Progress to Level ${safeUserData.level + 1}`,
+            name: `Продвижение к уровню ${safeUserData.level + 1}`,
             value: `${progressBar} ${progress}%`
           }
         )
@@ -98,9 +98,9 @@ export default {
         .setTimestamp();
 
       await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
-      logger.debug(`Rank checked for user ${targetUser.id} in guild ${interaction.guildId}`);
+      logger.debug(`Рейтинг проверен для пользователя ${targetUser.id} в гильдии ${interaction.guildId}`);
     } catch (error) {
-      logger.error('Rank command error:', error);
+      logger.error('Ошибка команды ранжирования:', error);
       await handleInteractionError(interaction, error, {
         type: 'command',
         commandName: 'rank'
