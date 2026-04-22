@@ -6,27 +6,27 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('cases')
-        .setDescription('View moderation cases and audit logs')
+        .setDescription('Просмотр случаев модерации и журналов аудита')
         .setDefaultMemberPermissions(PermissionFlagsBits.ViewAuditLog)
         .setDMPermission(false)
         .addStringOption(option =>
             option.setName('filter')
-                .setDescription('Filter cases by type or user')
+                .setDescription('Фильтрация обращений по типу или пользователю')
                 .addChoices(
-                    { name: 'All Cases', value: 'all' },
-                    { name: 'Bans', value: 'Member Banned' },
-                    { name: 'Kicks', value: 'Member Kicked' },
-                    { name: 'Timeouts', value: 'Member Timed Out' },
-                    { name: 'Warnings', value: 'User Warned' }
+                    { name: 'Все случаи', value: 'all' },
+                    { name: 'Баны', value: 'Member Banned' },
+                    { name: 'Исключения', value: 'Member Kicked' },
+                    { name: 'Тайм-Ауты', value: 'Member Timed Out' },
+                    { name: 'Предупреждения', value: 'User Warned' }
                 )
         )
         .addUserOption(option =>
             option.setName('user')
-                .setDescription('Filter cases by specific user')
+                .setDescription('Фильтровать обращения по конкретному пользователю')
         )
         .addIntegerOption(option =>
             option.setName('limit')
-                .setDescription('Number of cases to show (default: 10)')
+                .setDescription('Количество случаев, которые необходимо показать (default: 10)')
                 .setMinValue(1)
                 .setMaxValue(50)
         ),
@@ -34,7 +34,7 @@ export default {
     async execute(interaction, config, client) {
         const deferSuccess = await InteractionHelper.safeDefer(interaction);
         if (!deferSuccess) {
-            logger.warn(`Cases interaction defer failed`, {
+            logger.warn(`Случаи, когда не удалось отложить взаимодействие`, {
                 userId: interaction.user.id,
                 guildId: interaction.guildId,
                 commandName: 'cases'
@@ -57,8 +57,8 @@ export default {
 
             if (cases.length === 0) {
                 throw new Error(targetUser 
-                    ? `No moderation cases found for ${targetUser.tag}`
-                    : `No ${filterType === 'all' ? '' : filterType} cases found in this server.`
+                    ? `Не найдено случаев модерации для ${targetUser.tag}`
+                    : `Нет ${filterType === 'all' ? '' : filterType} обращения, найденные на этом сервере.`
                 );
             }
 
@@ -72,8 +72,8 @@ export default {
                 const pageCases = cases.slice(startIndex, endIndex);
 
                 const embed = createEmbed({
-                    title: '📋 Moderation Cases',
-                    description: `Showing moderation cases for **${interaction.guild.name}**\n\n**Page ${page} of ${totalPages}**`
+                    title: '📋 Случаи модерации',
+                    description: `Отображение примеров модерации для **${interaction.guild.name}**\n\n**Страница ${page} от ${totalPages}**`
                 });
 
                 pageCases.forEach(case_ => {
@@ -82,13 +82,13 @@ export default {
                     
                     embed.addFields({
                         name: `Case #${case_.caseId} - ${case_.action}`,
-                        value: `**Target:** ${case_.target}\n**Moderator:** ${case_.executor}\n**Date:** ${date} at ${time}\n**Reason:** ${case_.reason || 'No reason provided'}`,
+                        value: `**Цель:** ${case_.target}\n**Модератор:** ${case_.executor}\n**Дата:** ${date} at ${time}\n**Причина:** ${case_.reason || 'Причина не указана'}`,
                         inline: false
                     });
                 });
 
                 embed.setFooter({
-                    text: `Total cases: ${cases.length} | Filter: ${filterType}${targetUser ? ` | User: ${targetUser.tag}` : ''}`
+                    text: `Общее количество случаев: ${cases.length} | Фильтр: ${filterType}${targetUser ? ` | Пользователь: ${targetUser.tag}` : ''}`
                 });
 
                 return embed;
@@ -99,7 +99,7 @@ export default {
                 
                 const prevButton = new ButtonBuilder()
                     .setCustomId('prev_page')
-                    .setLabel('⬅️ Previous')
+                    .setLabel('⬅️ Предыдущий')
                     .setStyle(ButtonStyle.Secondary)
                     .setDisabled(page === 1);
 
@@ -111,7 +111,7 @@ export default {
 
                 const nextButton = new ButtonBuilder()
                     .setCustomId('next_page')
-                    .setLabel('Next ➡️')
+                    .setLabel('Следующий ➡️')
                     .setStyle(ButtonStyle.Secondary)
                     .setDisabled(page === totalPages);
 
@@ -134,7 +134,7 @@ time: 120000
 
                 if (buttonInteraction.user.id !== interaction.user.id) {
                     await buttonInteraction.followUp({
-                        content: 'You cannot use these buttons. Run `/cases` to get your own case view.',
+                        content: 'Вы не можете использовать эти кнопки. Запустите `/cases`, чтобы открыть собственное представление дел.',
                         flags: MessageFlags.Ephemeral
                     });
                     return;
@@ -171,8 +171,8 @@ time: 120000
             return InteractionHelper.safeEditReply(interaction, {
                 embeds: [
                     errorEmbed(
-                        'System Error',
-                        'An error occurred while retrieving moderation cases. Please try again later.'
+                        'Системная ошибка',
+                        'Произошла ошибка при получении данных о случаях модерации. Пожалуйста, повторите попытку позже.'
                     )
                 ],
                 flags: MessageFlags.Ephemeral
