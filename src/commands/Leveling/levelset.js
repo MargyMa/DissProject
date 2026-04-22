@@ -14,17 +14,17 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 export default {
   data: new SlashCommandBuilder()
     .setName('levelset')
-    .setDescription("Set a user's level to a specific value")
+    .setDescription("Установите для пользователя определенный уровень")
     .addUserOption((option) =>
       option
         .setName('user')
-        .setDescription('The user to set the level for')
+        .setDescription('Пользователь может установить уровень')
         .setRequired(true)
     )
     .addIntegerOption((option) =>
       option
         .setName('level')
-        .setDescription('The level to set')
+        .setDescription('Уровень, который нужно установить')
         .setRequired(true)
         .setMinValue(0)
     )
@@ -46,7 +46,7 @@ export default {
       const hasPermission = await checkUserPermissions(
         interaction,
         PermissionFlagsBits.ManageGuild,
-        'You need ManageGuild permission to use this command.'
+        'Для использования этой команды вам необходимо разрешение ManageGuild.'
       );
       if (!hasPermission) return;
 
@@ -56,7 +56,7 @@ export default {
           embeds: [
             new EmbedBuilder()
               .setColor('#f1c40f')
-              .setDescription('The leveling system is currently disabled on this server.')
+              .setDescription('На этом сервере система повышения уровня в настоящее время отключена.')
           ],
           flags: MessageFlags.Ephemeral
         });
@@ -70,9 +70,9 @@ export default {
       const member = await interaction.guild.members.fetch(targetUser.id).catch(() => null);
       if (!member) {
         throw new TitanBotError(
-          `User ${targetUser.id} not found in this guild`,
+          `Пользователь ${targetUser.id} не найден в этой гильдии`,
           ErrorTypes.USER_INPUT,
-          'The specified user is not in this server.'
+          'Указанный пользователь не зарегистрирован на этом сервере.'
         );
       }
 
@@ -82,8 +82,8 @@ export default {
       await InteractionHelper.safeEditReply(interaction, {
         embeds: [
           createEmbed({
-            title: '✅ Level Set',
-            description: `Successfully set ${targetUser.tag}'s level to **${newLevel}**.\n**Total XP:** ${userData.totalXp}`,
+            title: '✅ Установленный уровень',
+            description: `Успешно установлен ${targetUser.tag}'s уровень до **${newLevel}**.\n**Общий опыт:** ${userData.totalXp}`,
             color: 'success'
           })
         ]
