@@ -8,11 +8,11 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 export default {
     data: new SlashCommandBuilder()
         .setName("untimeout")
-        .setDescription("Remove timeout from a user")
+        .setDescription("Удалить тайм-аут у пользователя")
         .addUserOption((option) =>
             option
                 .setName("target")
-                .setDescription("User to untimeout")
+                .setDescription("Пользователь отключает тайм-аут")
                 .setRequired(true),
         )
 .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers),
@@ -21,7 +21,7 @@ export default {
     async execute(interaction, config, client) {
         const deferSuccess = await InteractionHelper.safeDefer(interaction);
         if (!deferSuccess) {
-            logger.warn(`Untimeout interaction defer failed`, {
+            logger.warn(`Не удалось отложить взаимодействие до истечения времени ожидания`, {
                 userId: interaction.user.id,
                 guildId: interaction.guildId,
                 commandName: 'untimeout'
@@ -43,12 +43,12 @@ export default {
                 await InteractionHelper.safeEditReply(interaction, {
                     embeds: [
                         successEmbed(
-                            `🔓 **Removed timeout** from ${targetUser.tag}`,
+                            `🔓 **Устранен тайм-аут** от ${targetUser.tag}`,
                         ),
                     ],
                 });
         } catch (error) {
-            logger.error('Untimeout command error:', error);
+            logger.error('Ошибка команды Untimeout:', error);
             await handleInteractionError(interaction, error, { subtype: 'untimeout_failed' });
         }
     }
