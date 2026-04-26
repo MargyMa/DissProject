@@ -14,7 +14,7 @@ export function validateBirthday(month, day) {
   if (typeof month !== 'number' || typeof day !== 'number') {
     return {
       isValid: false,
-      error: 'Month and day must be numbers'
+      error: 'Месяц и день должны быть указаны цифрами'
     };
   }
 
@@ -22,7 +22,7 @@ export function validateBirthday(month, day) {
   if (month < 1 || month > 12) {
     return {
       isValid: false,
-      error: 'Month must be between 1 and 12'
+      error: 'Месяц должен быть от 1 до 12'
     };
   }
 
@@ -30,7 +30,7 @@ export function validateBirthday(month, day) {
   if (day < 1 || day > 31) {
     return {
       isValid: false,
-      error: 'Day must be between 1 and 31'
+      error: 'День должен быть между 1 и 31 числом'
     };
   }
 
@@ -41,7 +41,7 @@ export function validateBirthday(month, day) {
   if (isNaN(date.getTime()) || date.getMonth() !== month - 1 || date.getDate() !== day) {
     return {
       isValid: false,
-      error: 'Invalid date. Please check the month and day combination (e.g., February 29th only exists in leap years)'
+      error: 'Неверная дата. Пожалуйста, проверьте сочетание месяца и дня (например, 29 февраля бывает только в высокосные годы)'
     };
   }
 
@@ -83,9 +83,9 @@ export async function setBirthday(client, guildId, userId, month, day) {
     
     if (!success) {
       throw new TitanBotError(
-        'Failed to save birthday to database',
+        'Не удалось сохранить дату рождения в базе данных',
         ErrorTypes.DATABASE,
-        'Failed to set your birthday. Please try again later.',
+        'Не удалось установить дату вашего рождения. Пожалуйста, повторите попытку позже.',
         { userId, guildId, month, day }
       );
     }
@@ -204,7 +204,7 @@ export async function deleteBirthday(client, guildId, userId) {
       return {
         success: false,
         notFound: true,
-        message: 'No birthday found to remove'
+        message: 'Не найден день рождения, который можно было бы удалить'
       };
     }
 
@@ -212,9 +212,9 @@ export async function deleteBirthday(client, guildId, userId) {
     
     if (!success) {
       throw new TitanBotError(
-        'Failed to delete birthday from database',
+        'Не удалось удалить день рождения из базы данных',
         ErrorTypes.DATABASE,
-        'Failed to remove your birthday. Please try again.',
+        'Не удалось удалить дату вашего рождения. Пожалуйста, попробуйте еще раз.',
         { userId, guildId }
       );
     }
@@ -339,7 +339,7 @@ export async function checkBirthdays(client) {
   const currentDay = today.getUTCDate();
 
   if (process.env.NODE_ENV !== 'production') {
-    logger.debug(`🎂 Running daily birthday check for UTC: ${currentMonth}/${currentDay}.`);
+    logger.debug(`🎂 Ежедневная проверка даты рождения по UTC: ${currentMonth}/${currentDay}.`);
   }
 
   for (const [guildId, guild] of client.guilds.cache) {
@@ -349,7 +349,7 @@ export async function checkBirthdays(client) {
 
       if (!birthdayChannelId || !birthdayRoleId) {
         if (process.env.NODE_ENV !== 'production') {
-          logger.debug(`Skipping birthday check for ${guild.name}: Missing channel or role config.`);
+          logger.debug(`Пропуск проверки на день рождения для ${guild.name}: Отсутствует конфигурация канала или роли.`);
         }
         continue;
       }
@@ -365,7 +365,7 @@ export async function checkBirthdays(client) {
         try {
           const member = await guild.members.fetch(userId).catch(() => null);
           if (member && member.roles.cache.has(birthdayRoleId)) {
-            await member.roles.remove(birthdayRoleId, "Birthday role expired");
+            await member.roles.remove(birthdayRoleId, "Срок действия роли на день рождения истек");
           }
           delete updatedTrackingData[userId];
         } catch (error) {
@@ -386,7 +386,7 @@ export async function checkBirthdays(client) {
           if (member) {
             birthdayMembers.push(member);
             try {
-              await member.roles.add(birthdayRoleId, "Happy Birthday! 🎉");
+              await member.roles.add(birthdayRoleId, "С Днем Рождения! 🎉");
               updatedTrackingData[userId] = true;
             } catch (error) {
                 logger.error(`Error adding birthday role to ${member.user.tag}:`, error);
@@ -401,10 +401,10 @@ export async function checkBirthdays(client) {
         
         await channel.send({
           embeds: [{
-            title: '🎉 Happy Birthday! 🎂',
-            description: `A very happy birthday to ${mentionList}! Wishing you an amazing day! 🎈`,
+            title: '🎉 С Днем Рождения! 🎂',
+            description: `От всей души поздравляю с днем рождения ${mentionList}! Желаю вам чудесного дня! 🎈`,
             color: 0xff69b4,
-            footer: { text: 'Birthday Bot' },
+            footer: { text: 'День рождения Бот' },
             timestamp: new Date()
           }]
         });
