@@ -18,13 +18,13 @@ export async function addXp(client, guild, member, xpToAdd) {
   try {
     
     if (!xpToAdd || xpToAdd <= 0) {
-      return { success: false, reason: 'Invalid XP amount' };
+      return { success: false, reason: 'Недопустимое количество опыта' };
     }
 
     const config = await getLevelingConfig(client, guild.id);
     
     if (!config.enabled) {
-      return { success: false, reason: 'Leveling is disabled in this server' };
+      return { success: false, reason: 'На этом сервере уровни отключено' };
     }
     
     const levelData = await getUserLevelData(client, guild.id, member.user.id);
@@ -42,7 +42,7 @@ export async function addXp(client, guild, member, xpToAdd) {
       levelData.xp = levelData.xp - xpNeededForNextLevel;
       didLevelUp = true;
       
-      logger.info(`🎉 ${member.user.tag} leveled up to level ${levelData.level} in ${guild.name}`);
+      logger.info(`🎉 ${member.user.tag} выровнялся до уровня ${levelData.level} в ${guild.name}`);
       
       
       if (config.roleRewards && config.roleRewards[levelData.level]) {
@@ -61,21 +61,21 @@ export async function addXp(client, guild, member, xpToAdd) {
           guildId: guild.id,
           eventType: EVENT_TYPES.LEVELING_LEVELUP,
           data: {
-            description: `${member.user.tag} reached level ${levelData.level}`,
+            description: `${member.user.tag} достигнутый уровень ${levelData.level}`,
             userId: member.user.id,
             fields: [
               {
-                name: '👤 Member',
+                name: '👤 Участник',
                 value: `${member.user.tag} (${member.user.id})`,
                 inline: true
               },
               {
-                name: '📊 New Level',
+                name: '📊 Новый уровень',
                 value: levelData.level.toString(),
                 inline: true
               },
               {
-                name: '✨ Total XP',
+                name: '✨ Общий опыт',
                 value: levelData.totalXp.toString(),
                 inline: true
               }
