@@ -19,15 +19,15 @@ export default {
             if (result.success) {
                 await InteractionHelper.safeEditReply(interaction, {
                     embeds: [successEmbed(
-                        "Your birthday has been successfully removed from the server.",
-                        "Birthday Removed 🗑️"
+                        "Ваш день рождения успешно удален с сервера.",
+                        "День рождения удален 🗑️"
                     )]
                 });
             } else if (result.notFound) {
                 await InteractionHelper.safeEditReply(interaction, {
                     embeds: [createEmbed({
-                        title: '❌ No Birthday Found',
-                        description: "You don't have a birthday set to remove.",
+                        title: '❌ Дата рождения не найдена',
+                        description: "У вас нет набора для удаления дня рождения.",
                         color: 'error'
                     })]
                 });
