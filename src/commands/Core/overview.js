@@ -10,17 +10,17 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 import { logger } from '../../utils/logger.js';
 
 function pill(enabled) {
-    return enabled ? '✅ On' : '❌ Off';
+    return enabled ? '✅ Включён' : '❌ Выключен';
 }
 
 async function formatChannelMention(guild, id) {
-    if (!id) return '`Not configured`';
+    if (!id) return '`Не настроен`';
     const channel = guild.channels.cache.get(id) ?? await guild.channels.fetch(id).catch(() => null);
     return channel ? channel.toString() : `⚠️ Missing (${id})`;
 }
 
 function formatRoleMention(guild, id) {
-    if (!id) return '`Not configured`';
+    if (!id) return '`Не настроен`';
     const role = guild.roles.cache.get(id);
     return role ? role.toString() : `⚠️ Missing (${id})`;
 }
@@ -28,7 +28,7 @@ function formatRoleMention(guild, id) {
 export default {
     data: new SlashCommandBuilder()
         .setName('overview')
-        .setDescription('Read-only snapshot of all server system statuses.')
+        .setDescription('Снимок состояния всех систем сервера, доступный только для чтения.')
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
         .setDMPermission(false),
 
@@ -61,47 +61,47 @@ export default {
                 ]);
 
             const embed = new EmbedBuilder()
-                .setTitle('🖥️ System Overview')
-                .setDescription(`Read-only snapshot for **${interaction.guild.name}**. Use the relevant command's dashboard to make changes.`)
+                .setTitle('🖥️ Обзор системы')
+                .setDescription(`Моментальный снимок только для чтения для **${interaction.guild.name}**. Для внесения изменений используйте панель управления соответствующей команды.`)
                 .setColor(getColor('primary'))
                 .addFields(
                     // ── Core systems ──
                     {
-                        name: '⚙️ Core Systems',
+                        name: '⚙️ Основные системы',
                         value: [
-                            `🧾 **Audit Logging** — ${pill(Boolean(loggingStatus.enabled))}`,
-                            `📈 **Leveling** — ${pill(Boolean(levelingConfig?.enabled))}`,
-                            `👋 **Welcome** — ${pill(Boolean(welcomeConfig?.enabled))}`,
-                            `👋 **Goodbye** — ${pill(Boolean(welcomeConfig?.goodbyeEnabled))}`,
-                            `🎂 **Birthdays** — ${pill(Boolean(guildConfig.birthdayChannelId))}`,
-                            `📋 **Applications** — ${pill(Boolean(applicationConfig?.enabled))}`,
-                            `✅ **Verification** — ${pill(verificationEnabled)}`,
-                            `🤖 **Auto-Verify** — ${pill(autoVerifyEnabled)}`,
-                            `🎧 **Join to Create** — ${pill(Boolean(joinToCreateConfig?.enabled))}`,
-                            `🛡️ **Auto Role** — ${autoRoleId ? `✅ ${formatRoleMention(interaction.guild, autoRoleId)}` : '❌ Off'}`,
+                            `🧾 **Ведение журнала аудита** — ${pill(Boolean(loggingStatus.enabled))}`,
+                            `📈 **Уровни** — ${pill(Boolean(levelingConfig?.enabled))}`,
+                            `👋 **Добро пожаловать** — ${pill(Boolean(welcomeConfig?.enabled))}`,
+                            `👋 **До свидания** — ${pill(Boolean(welcomeConfig?.goodbyeEnabled))}`,
+                            `🎂 **Дни рождения** — ${pill(Boolean(guildConfig.birthdayChannelId))}`,
+                            `📋 **Приложения** — ${pill(Boolean(applicationConfig?.enabled))}`,
+                            `✅ **Верификация** — ${pill(verificationEnabled)}`,
+                            `🤖 **Автоматическая верификация** — ${pill(autoVerifyEnabled)}`,
+                            `🎧 **Присоединяйтесь, чтобы создать** — ${pill(Boolean(joinToCreateConfig?.enabled))}`,
+                            `🛡️ **Автоматическая роль** — ${autoRoleId ? `✅ ${formatRoleMention(interaction.guild, autoRoleId)}` : '❌ Off'}`,
                         ].join('\n'),
                         inline: false,
                     },
                     // ── Channels ──
                     {
-                        name: '📡 Configured Channels',
+                        name: '📡 Настроенные каналы',
                         value: [
-                            `**Audit Log:** ${auditChannel}`,
-                            `**Ticket Lifecycle:** ${lifecycleChannel}`,
-                            `**Ticket Transcripts:** ${transcriptChannel}`,
-                            `**Reports:** ${reportChannel}`,
-                            `**Birthdays:** ${birthdayChannel}`,
+                            `**Журнал аудита:** ${auditChannel}`,
+                            `**Жизненный цикл тикитов:** ${lifecycleChannel}`,
+                            `**Расшифровки тикетов:** ${transcriptChannel}`,
+                            `**Репорты:** ${reportChannel}`,
+                            `**Дни рождения:** ${birthdayChannel}`,
                         ].join('\n'),
                         inline: false,
                     },
                     // ── Refresh stamp ──
                     {
-                        name: '🕒 Snapshot Taken',
+                        name: '🕒 Сделан моментальный снимок',
                         value: `<t:${Math.floor(Date.now() / 1000)}:R>`,
                         inline: true,
                     },
                 )
-                .setFooter({ text: 'Read-only — run /logging dashboard to manage audit settings' })
+                .setFooter({ text: 'Запуск только для чтения /logging dashboard для управления параметрами аудита' })
                 .setTimestamp();
 
             await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
