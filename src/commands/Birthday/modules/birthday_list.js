@@ -19,15 +19,15 @@ export default {
             if (sortedBirthdays.length === 0) {
                 return await InteractionHelper.safeEditReply(interaction, {
                     embeds: [createEmbed({
-                        title: '❌ No Birthdays',
-                        description: 'No birthdays have been set in this server yet.',
+                        title: '❌ Никаких дней рождения',
+                        description: 'На этом сервере еще не заданы дни рождения.',
                         color: 'error'
                     })]
                 });
             }
 
             const embed = createEmbed({
-                title: "🎂 Server Birthdays",
+                title: "🎂 Дни рождения сервера",
                 color: 'info'
             });
 
@@ -58,8 +58,8 @@ export default {
             if (displayIndex === 0) {
                 return await InteractionHelper.safeEditReply(interaction, {
                     embeds: [createEmbed({
-                        title: '❌ No Birthdays',
-                        description: 'No birthdays have been set by current server members.',
+                        title: '❌ Никаких дней рождения',
+                        description: 'Текущие участники сервера не указали свои дни рождения.',
                         color: 'error'
                     })]
                 });
