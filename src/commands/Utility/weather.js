@@ -9,11 +9,11 @@ const WEATHER_URL = "https://api.open-meteo.com/v1/forecast";
 export default {
     data: new SlashCommandBuilder()
         .setName("weather")
-        .setDescription("Get real-time weather information for a location")
+        .setDescription("Получайте информацию о погоде в реальном времени для любого места")
         .addStringOption((option) =>
             option
                 .setName("city")
-                .setDescription("The city name, e.g., 'London' or 'Tokyo'")
+                .setDescription("Название города, например., 'Лондон' или 'Токио'")
                 .setRequired(true),
         ),
 
@@ -45,8 +45,8 @@ export default {
                 await InteractionHelper.safeEditReply(interaction, {
                     embeds: [
                         errorEmbed(
-                            "City Not Found",
-                            `Could not find a location for **${city}**. Please check the spelling.`,
+                            "Город Не найден",
+                            `Не удалось найти местоположение **${city}**. Пожалуйста, проверьте правильность написания.`,
                         ),
                     ],
                 });
@@ -71,8 +71,8 @@ export default {
                 await InteractionHelper.safeEditReply(interaction, {
                     embeds: [
                         errorEmbed(
-                            "API Error",
-                            "A weather service error occurred.",
+                            "Ошибка API",
+                            "Произошла ошибка метеорологической службы.",
                         ),
                     ],
                 });
@@ -87,26 +87,26 @@ export default {
 
             const condition = getWeatherDescription(weatherCode);
 
-            const embed = createEmbed({ title: `🌎 Weather in ${cityDisplay}, ${country}`, description: condition.description })
+            const embed = createEmbed({ title: `🌎 Погода в ${cityDisplay}, ${country}`, description: condition.description })
                 .addFields(
                     {
-                        name: "🌡️ Temperature",
+                        name: "🌡️ Температура",
                         value: `${temperature}°C`,
                         inline: true,
                     },
                     {
-                        name: "💧 Humidity",
+                        name: "💧 Влажность",
                         value: `${humidity}%`,
                         inline: true,
                     },
                     {
-                        name: "💨 Wind Speed",
-                        value: `${windSpeed} km/h`,
+                        name: "💨 Скорость ветра",
+                        value: `${windSpeed} км/ч`,
                         inline: true,
                     },
                 )
                 .setFooter({
-                    text: `Latitude: ${latitude.toFixed(2)} | Longitude: ${longitude.toFixed(2)}`,
+                    text: `Широта: ${latitude.toFixed(2)} | Долгота: ${longitude.toFixed(2)}`,
                 });
 
             await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
