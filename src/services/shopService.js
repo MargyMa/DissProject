@@ -24,12 +24,12 @@ class ShopService {
             const { guildId, client } = options;
             
             if (!client) {
-                throw new Error('Client is required for shop operations');
+                throw new Error('Клиент необходим для работы магазина');
             }
             
             const item = getItemById(itemId);
             if (!item) {
-                return { success: false, message: 'Item not found in the shop.' };
+                return { success: false, message: 'Товар не найден в магазине.' };
             }
 
             const userData = await getEconomyData(client, guildId, userId);
@@ -40,7 +40,7 @@ class ShopService {
                 const currency = this.getCurrencyInfo();
                 return { 
                     success: false, 
-                    message: `You don't have enough ${currency.namePlural} to purchase this item.` 
+                    message: `Вам этого недостаточно ${currency.namePlural} чтобы приобрести этот товар.` 
                 };
             }
 
@@ -58,11 +58,11 @@ class ShopService {
             
             await setEconomyData(client, guildId, userId, userData);
 
-            this.logger.info(`User ${userId} purchased ${quantity}x ${item.name} for ${totalCost} ${this.getCurrencyName()}`);
+            this.logger.info(`Пользователь ${userId} приобретенный ${quantity}x ${item.name} для ${totalCost} ${this.getCurrencyName()}`);
 
             return {
                 success: true,
-                message: `Successfully purchased ${quantity}x ${item.name} for ${totalCost} ${this.getCurrencyName()}`,
+                message: `Успешно приобретенный ${quantity}x ${item.name} для ${totalCost} ${this.getCurrencyName()}`,
                 data: {
                     item,
                     quantity,
@@ -150,10 +150,10 @@ class ShopService {
         const { category, page = 1 } = options;
         
         const embed = new EmbedBuilder()
-            .setTitle('🛒 TitanBot Shop')
+            .setTitle('🛒 Магазин')
             .setColor('#5865F2')
-            .setDescription('Browse and purchase items from the shop. Use the buttons to navigate.')
-            .setFooter({ text: `Page ${page}` });
+            .setDescription('Просматривайте товары в магазине и совершайте покупки. Используйте кнопки для навигации.')
+            .setFooter({ text: `Страница ${page}` });
 
         
         return embed;
@@ -167,9 +167,9 @@ class ShopService {
         const categories = [
             { 
                 id: 'all', 
-                name: 'All Items', 
+                name: 'Все предметы', 
                 emoji: '🛍️',
-                description: 'Browse all available items',
+                description: 'Просмотрите все доступные элементы',
                 icon: '🛍️'
             },
             ...shopConfig.categories
