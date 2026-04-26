@@ -8,23 +8,23 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 export default {
     data: new SlashCommandBuilder()
         .setName("dm")
-        .setDescription("Send a direct message to a user (Staff only)")
+        .setDescription("Отправьте пользователю личное сообщение (Только для сотрудников)")
         .addUserOption(option =>
             option
                 .setName("user")
-                .setDescription("The user to send a DM to")
+                .setDescription("Пользователь, которому нужно отправить личное сообщение")
                 .setRequired(true)
         )
         .addStringOption(option =>
             option
                 .setName("message")
-                .setDescription("The message to send")
+                .setDescription("Сообщение для отправки")
                 .setRequired(true)
         )
         .addBooleanOption(option =>
             option
                 .setName("anonymous")
-                .setDescription("Send the message anonymously (default: false)")
+                .setDescription("Отправьте сообщение анонимно (default: false)")
                 .setRequired(false)
         )
         .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
@@ -52,8 +52,8 @@ export default {
                 return await InteractionHelper.safeEditReply(interaction, {
                     embeds: [
                         errorEmbed(
-                            "Message Too Long",
-                            "Messages must be under 2000 characters."
+                            "Сообщение слишком длинное",
+                            "Сообщения должны содержать не более 2000 символов."
                         ),
                     ],
                     flags: MessageFlags.Ephemeral,
@@ -65,8 +65,8 @@ export default {
                 return await InteractionHelper.safeEditReply(interaction, {
                     embeds: [
                         errorEmbed(
-                            "Cannot DM Bot",
-                            "You cannot send DMs to bot accounts."
+                            "Не удается отправить DM-боту",
+                            "Вы не можете отправлять личные сообщения ботам."
                         ),
                     ],
                     flags: MessageFlags.Ephemeral,
@@ -81,10 +81,10 @@ export default {
             await dmChannel.send({
                 embeds: [
                     successEmbed(
-                        anonymous ? "Message from the Staff Team" : `Message from ${interaction.user.tag}`,
+                        anonymous ? "Сообщение от команды сотрудников" : `Сообщение от ${interaction.user.tag}`,
                         sanitized
                     ).setFooter({
-                        text: `You cannot reply to this message. | Logger ID: ${interaction.id}`
+                        text: `Вы не можете ответить на это сообщение. | Идентификатор регистратора: ${interaction.id}`
                     })
                 ]
             });
@@ -93,10 +93,10 @@ export default {
                 client: interaction.client,
                 guild: interaction.guild,
                 event: {
-                    action: "DM Sent",
+                    action: "Отправлено DM",
                     target: `${targetUser.tag} (${targetUser.id})`,
                     executor: `${interaction.user.tag} (${interaction.user.id})`,
-                    reason: `Anonymous: ${anonymous ? 'Yes' : 'No'}`,
+                    reason: `Анонимный: ${anonymous ? 'Да' : 'Нет'}`,
                     metadata: {
                         userId: targetUser.id,
                         moderatorId: interaction.user.id,
@@ -109,8 +109,8 @@ export default {
             return await InteractionHelper.safeEditReply(interaction, {
                 embeds: [
                     successEmbed(
-                        "DM Sent",
-                        `Successfully sent a message to ${targetUser.tag}`
+                        "Отправлено DM",
+                        `Успешно отправлено сообщение на ${targetUser.tag}`
                     ),
                 ],
             });
@@ -120,14 +120,14 @@ export default {
 if (error.code === 50007) {
                 return await InteractionHelper.safeEditReply(interaction, {
                     embeds: [
-                        errorEmbed("Error", `Could not send a DM to ${targetUser.tag}. They may have DMs disabled.`),
+                        errorEmbed("Ошибка", `Не удалось отправить личное сообщение ${targetUser.tag}. Возможно, у них отключены личные сообщения.`),
                     ],
                 });
             }
             
             return await InteractionHelper.safeEditReply(interaction, {
                 embeds: [
-                    errorEmbed("Error", `Failed to send DM: ${error.message}`),
+                    errorEmbed("Ошибка", `Не удалось отправить DM: ${error.message}`),
                 ],
             });
         }
