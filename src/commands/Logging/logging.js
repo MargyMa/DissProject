@@ -10,75 +10,75 @@ import filter from './modules/logging_filter.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('logging')
-        .setDescription('Manage audit logging for this server.')
+        .setDescription('Управление ведением журналов аудита для этого сервера.')
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
         .setDMPermission(false)
         .addSubcommand((subcommand) =>
             subcommand
                 .setName('dashboard')
-                .setDescription('Open the interactive logging dashboard — view status and toggle event categories.'),
+                .setDescription('Откройте интерактивную панель управления логированием — просмотрите статус и переключайте категории событий.'),
         )
         .addSubcommand((subcommand) =>
             subcommand
                 .setName('setchannel')
-                .setDescription('Set the audit log channel for this server.')
+                .setDescription('Настройте канал журнала аудита для этого сервера.')
                 .addChannelOption((option) =>
                     option
                         .setName('channel')
-                        .setDescription('The text channel for audit logs.')
+                        .setDescription('Текстовый канал для журналов аудита.')
                         .addChannelTypes(ChannelType.GuildText)
                         .setRequired(false),
                 )
                 .addBooleanOption((option) =>
                     option
                         .setName('disable')
-                        .setDescription('Set to True to disable audit logging entirely.')
+                        .setDescription('Установите значение True, чтобы полностью отключить ведение журнала аудита.')
                         .setRequired(false),
                 ),
         )
         .addSubcommandGroup((group) =>
             group
                 .setName('filter')
-                .setDescription('Manage the log ignore list (users and channels to skip).')
+                .setDescription('Управление списком игнорирования журнала (пользователи и каналы, которые следует пропустить).')
                 .addSubcommand((subcommand) =>
                     subcommand
                         .setName('add')
-                        .setDescription('Add a user or channel to the log ignore list.')
+                        .setDescription('Добавьте пользователя или канал в список игнорируемых в журнале.')
                         .addStringOption((option) =>
                             option
                                 .setName('type')
-                                .setDescription('Whether to ignore a user or channel.')
+                                .setDescription('Стоит ли игнорировать пользователя или канал.')
                                 .setRequired(true)
                                 .addChoices(
-                                    { name: 'User', value: 'user' },
-                                    { name: 'Channel', value: 'channel' },
+                                    { name: 'Пользователь', value: 'user' },
+                                    { name: 'Канал', value: 'channel' },
                                 ),
                         )
                         .addStringOption((option) =>
                             option
                                 .setName('id')
-                                .setDescription('The ID of the user or channel to ignore.')
+                                .setDescription('Идентификатор пользователя или канала, который нужно игнорировать.')
                                 .setRequired(true),
                         ),
                 )
                 .addSubcommand((subcommand) =>
                     subcommand
                         .setName('remove')
-                        .setDescription('Remove a user or channel from the log ignore list.')
+                        .setDescription('Удалите пользователя или канал из списка игнорируемых в журнале.')
                         .addStringOption((option) =>
                             option
                                 .setName('type')
-                                .setDescription('Whether this is a user or channel.')
+                                .setDescription('Будь то пользователь или канал.')
                                 .setRequired(true)
                                 .addChoices(
-                                    { name: 'User', value: 'user' },
-                                    { name: 'Channel', value: 'channel' },
+                                    { name: 'Пользователь', value: 'user' },
+                                    { name: 'Канал', value: 'channel' },
                                 ),
                         )
                         .addStringOption((option) =>
                             option
                                 .setName('id')
-                                .setDescription('The ID of the user or channel to remove from the ignore list.')
+                                .setDescription('Идентификатор пользователя или канала, который нужно удалить из списка игнорируемых.')
                                 .setRequired(true),
                         ),
                 ),
@@ -105,7 +105,7 @@ export default {
             }
 
             await InteractionHelper.safeEditReply(interaction, {
-                embeds: [errorEmbed('Unknown Subcommand', 'This subcommand is not recognised.')],
+                embeds: [errorEmbed('Неизвестная подкоманда', 'Эта подкоманда не распознается.')],
             });
         } catch (error) {
             logger.error('logging command error:', error);
