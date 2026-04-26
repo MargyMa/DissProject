@@ -9,13 +9,13 @@ export default {
     async execute(interaction, config, client) {
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
             return InteractionHelper.safeReply(interaction, {
-                embeds: [errorEmbed('Permission Denied', 'You need **Administrator** permissions to manage log filters.')],
+                embeds: [errorEmbed('В разрешении отказано', 'Тебе нужно **Администратор** разрешения на управление фильтрами журналов.')],
             });
         }
 
         if (!client.db) {
             return InteractionHelper.safeEditReply(interaction, {
-                embeds: [errorEmbed('Database Error', 'Database not initialized.')],
+                embeds: [errorEmbed('Ошибка в базе данных', 'База данных не инициализирована.')],
             });
         }
 
@@ -45,7 +45,7 @@ export default {
             entityName = channel ? `#${channel.name}` : `ID: ${entityId}`;
         } else {
             return InteractionHelper.safeEditReply(interaction, {
-                embeds: [errorEmbed('Invalid Type', "Choose `user` or `channel`.")],
+                embeds: [errorEmbed('Недопустимый тип', "Выбирать `user` или `channel`.")],
             });
         }
 
@@ -54,20 +54,20 @@ export default {
         if (subcommand === 'add') {
             if (targetArray.includes(entityId)) {
                 return InteractionHelper.safeEditReply(interaction, {
-                    embeds: [errorEmbed('Already Filtered', `${entityType} **${entityName}** is already on the ignore list.`)],
+                    embeds: [errorEmbed('Уже отфильтрованный', `${entityType} **${entityName}** уже в списке игнорируемых.`)],
                 });
             }
             targetArray.push(entityId);
-            successMessage = `${entityType} **${entityName}** added to the log ignore list. Events from them will not be logged.`;
+            successMessage = `${entityType} **${entityName}** добавлены в список игнорируемых журналов. События из них не будут регистрироваться.`;
         } else if (subcommand === 'remove') {
             const index = targetArray.indexOf(entityId);
             if (index === -1) {
                 return InteractionHelper.safeEditReply(interaction, {
-                    embeds: [errorEmbed('Not Filtered', `${entityType} **${entityName}** was not on the ignore list.`)],
+                    embeds: [errorEmbed('Не отфильтрованный', `${entityType} **${entityName}** не было в списке игнорируемых.`)],
                 });
             }
             targetArray.splice(index, 1);
-            successMessage = `${entityType} **${entityName}** removed from the log ignore list. Events will now be logged.`;
+            successMessage = `${entityType} **${entityName}** удалено из списка игнорируемых событий. Теперь события будут регистрироваться.`;
         } else {
             return;
         }
@@ -79,15 +79,15 @@ export default {
                 client,
                 guild: interaction.guild,
                 event: {
-                    action: 'Log Filter Updated',
-                    target: `Filter ${subcommand}`,
+                    action: 'Обновлен фильтр журналов',
+                    target: `Фильтр ${subcommand}`,
                     executor: `${interaction.user.tag} (${interaction.user.id})`,
                     metadata: { entityType, loggingEnabled: currentConfig.enableLogging },
                 },
             });
 
             await InteractionHelper.safeEditReply(interaction, {
-                embeds: [successEmbed('Filter Updated', successMessage)],
+                embeds: [successEmbed('Обновлен фильтр', successMessage)],
             });
         } catch (error) {
             logger.error('logging filter error:', error);
