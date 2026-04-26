@@ -8,7 +8,7 @@ export default {
     async execute(interaction, config, client) {
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
             return InteractionHelper.safeReply(interaction, {
-                embeds: [errorEmbed('Permission Denied', 'You need **Manage Server** permissions to configure the birthday channel.')],
+                embeds: [errorEmbed('В разрешении отказано', 'Тебе нужно **Управление сервером** разрешения для настройки канала «День рождения».')],
                 flags: MessageFlags.Ephemeral,
             });
         }
@@ -22,14 +22,14 @@ export default {
                 guildConfig.birthdayChannelId = channel.id;
                 await setGuildConfig(client, guildId, guildConfig);
                 return InteractionHelper.safeReply(interaction, {
-                    embeds: [successEmbed('🎂 Birthday Announcements Enabled', `Birthday announcements will now be posted in ${channel}.`)],
+                    embeds: [successEmbed('🎂 Включены объявления о дне рождения', `Объявления о днях рождения теперь будут публиковаться в ${channel}.`)],
                     flags: MessageFlags.Ephemeral,
                 });
             } else {
                 guildConfig.birthdayChannelId = null;
                 await setGuildConfig(client, guildId, guildConfig);
                 return InteractionHelper.safeReply(interaction, {
-                    embeds: [successEmbed('🎂 Birthday Announcements Disabled', 'No channel provided — birthday announcements have been disabled.')],
+                    embeds: [successEmbed('🎂 Объявления о дне рождения отключены', 'Канал не предоставлен — объявления о днях рождения отключены.')],
                     flags: MessageFlags.Ephemeral,
                 });
             }
