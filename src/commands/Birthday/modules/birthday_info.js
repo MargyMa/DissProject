@@ -20,32 +20,32 @@ export default {
             if (!birthdayData) {
                 return await InteractionHelper.safeEditReply(interaction, {
                     embeds: [createEmbed({
-                        title: '❌ No Birthday Found',
+                        title: '❌ Дата рождения не найдена',
                         description: targetUser.id === interaction.user.id 
-                            ? "You haven't set your birthday yet. Use `/birthday set` to add it!"
-                            : `${targetUser.username} hasn't set their birthday yet.`,
+                            ? "Вы еще не указали свой день рождения. Воспользуйся `/birthday set` чтобы добавить его!"
+                            : `${targetUser.username} еще не установил дату своего дня рождения.`,
                         color: 'error'
                     })]
                 });
             }
             
             const embed = createEmbed({
-                title: "🎂 Birthday Information",
-                description: `**Date:** ${birthdayData.monthName} ${birthdayData.day}\n**User:** ${targetUser.toString()}`,
+                title: "🎂 Информация о дне рождения",
+                description: `**Дата:** ${birthdayData.monthName} ${birthdayData.day}\n**Пользователь:** ${targetUser.toString()}`,
                 color: 'info',
-                footer: targetUser.id === interaction.user.id ? "Your Birthday" : `${targetUser.username}'s Birthday`
+                footer: targetUser.id === interaction.user.id ? "Твой день рождения" : `${targetUser.username}'s День рождения`
             });
             
             await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
             
-            logger.info('Birthday info retrieved successfully', {
+            logger.info('Информация о дне рождения успешно получена', {
                 userId: interaction.user.id,
                 targetUserId: targetUser.id,
                 guildId,
                 commandName: 'birthday_info'
             });
         } catch (error) {
-            logger.error("Birthday info command execution failed", {
+            logger.error("Ошибка при выполнении команды Информация о дне рождения", {
                 error: error.message,
                 stack: error.stack,
                 userId: interaction.user.id,
