@@ -79,9 +79,9 @@ class EconomyService {
         timeRemaining: remaining
       });
       throw createError(
-        "Daily cooldown active",
+        "Ежедневное восстановление активировано",
         ErrorTypes.RATE_LIMIT,
-        `You need to wait before claiming daily again. Try again in **${this.formatDuration(remaining)}**.`,
+        `Вам нужно подождать, прежде чем снова подавать заявку на ежедневный. Попробуйте еще раз **${this.formatDuration(remaining)}**.`,
         { remaining, cooldownType: 'daily' }
       );
     }
@@ -144,18 +144,18 @@ class EconomyService {
     
     if (amount <= 0) {
       throw createError(
-        "Invalid transfer amount",
+        "Недействительная сумма перевода",
         ErrorTypes.VALIDATION,
-        "Amount must be greater than zero.",
+        "Сумма должна быть больше нуля.",
         { amount, senderId }
       );
     }
 
     if (senderId === receiverId) {
       throw createError(
-        "Cannot pay self",
+        "Не могу расплатиться сам",
         ErrorTypes.VALIDATION,
-        "You cannot pay yourself.",
+        "Вы не можете заплатить сами.",
         { senderId, receiverId }
       );
     }
@@ -303,9 +303,9 @@ class EconomyService {
   static async removeMoney(client, guildId, userId, amount, reason = 'unknown') {
     if (amount <= 0) {
       throw createError(
-        "Invalid amount",
+        "Недопустимая сумма",
         ErrorTypes.VALIDATION,
-        "Amount must be positive",
+        "Сумма должна быть положительной",
         { amount, userId, reason }
       );
     }
@@ -317,9 +317,9 @@ class EconomyService {
 
     if (balanceBefore < amount) {
       throw createError(
-        "Insufficient funds",
+        "Недостаточно средств",
         ErrorTypes.VALIDATION,
-        `You only have **$${balanceBefore.toLocaleString()}**.`,
+        `У вас есть только **$${balanceBefore.toLocaleString()}**.`,
         { required: amount, available: balanceBefore, reason }
       );
     }
@@ -358,9 +358,9 @@ class EconomyService {
 
     if (userData.wallet < amount) {
       throw createError(
-        "Insufficient cash",
+        "Нехватка наличных средств",
         ErrorTypes.VALIDATION,
-        `You only have **$${userData.wallet.toLocaleString()}** in cash.`,
+        `У вас есть только **$${userData.wallet.toLocaleString()}** наличными.`,
         { required: amount, available: userData.wallet }
       );
     }
@@ -368,9 +368,9 @@ class EconomyService {
     const currentBank = userData.bank || 0;
     if (currentBank + amount > maxBank) {
       throw createError(
-        "Bank capacity exceeded",
+        "Превышена пропускная способность банка",
         ErrorTypes.VALIDATION,
-        `Your bank can only hold **$${maxBank.toLocaleString()}**. You would exceed capacity by **$${(currentBank + amount - maxBank).toLocaleString()}**.`,
+        `Ваш банк может хранить только **$${maxBank.toLocaleString()}**. Вы превысили бы пропускную способность на **$${(currentBank + amount - maxBank).toLocaleString()}**.`,
         { capacity: maxBank, current: currentBank, requested: amount }
       );
     }
@@ -414,9 +414,9 @@ class EconomyService {
 
     if (bank < amount) {
       throw createError(
-        "Insufficient bank balance",
+        "Недостаточный банковский баланс",
         ErrorTypes.VALIDATION,
-        `You only have **$${bank.toLocaleString()}** in your bank.`,
+        `У вас есть только **$${bank.toLocaleString()}** в вашем банке.`,
         { required: amount, available: bank }
       );
     }
@@ -473,18 +473,18 @@ class EconomyService {
   static validateAmount(amount, context = {}) {
     if (!Number.isInteger(amount)) {
       throw createError(
-        "Invalid amount - not an integer",
+        "Неверное значение — не целое число",
         ErrorTypes.VALIDATION,
-        "Amount must be a whole number",
+        "Сумма должна быть целым числом",
         context
       );
     }
 
     if (amount <= 0) {
       throw createError(
-        "Invalid amount - not positive",
+        "Неверная сумма - не положительная",
         ErrorTypes.VALIDATION,
-        "Amount must be positive",
+        "Сумма должна быть положительной",
         context
       );
     }
@@ -534,8 +534,8 @@ class EconomyService {
 wrapServiceClassMethods(EconomyService, (methodName) => ({
   service: 'EconomyService',
   operation: methodName,
-  message: `Economy service operation failed: ${methodName}`,
-  userMessage: 'An economy operation failed. Please try again in a moment.'
+  message: `Сбой в работе экономичного сервиса: ${methodName}`,
+  userMessage: 'Произошла ошибка при выполнении экономической операции. Пожалуйста, повторите попытку через некоторое время.'
 }));
 
 export default EconomyService;
