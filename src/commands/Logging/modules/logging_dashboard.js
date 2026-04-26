@@ -62,13 +62,13 @@ export async function buildLoggingDashboardView(interaction, client) {
     }).join('\n');
 
     const embed = new EmbedBuilder()
-        .setTitle('📋 Logging Dashboard')
-        .setDescription(`Manage audit logging for **${interaction.guild.name}**. Category buttons toggle logging instantly.`)
+        .setTitle('📋 Логи Приборная панель')
+        .setDescription(`Управление ведением журнала аудита для **${interaction.guild.name}**. Кнопки категорий мгновенно переключают ведение журнала.`)
         .setColor(auditEnabled ? getColor('success') : getColor('warning'))
         .addFields(
             {
-                name: '🧾 Audit Logging',
-                value: auditEnabled ? '✅ Enabled' : '❌ Disabled',
+                name: '🧾 Ведение журнала аудита',
+                value: auditEnabled ? '✅ Включенный' : '❌ Выключенный',
                 inline: true,
             },
             {
@@ -82,31 +82,31 @@ export async function buildLoggingDashboardView(interaction, client) {
                 inline: true,
             },
             {
-                name: '📡 Log Channels',
+                name: '📡 Каналы логов',
                 value: [
-                    `**Audit:** ${auditChannel}`,
-                    `**Ticket Logs:** ${lifecycleChannel}`,
-                    `**Ticket Transcripts:** ${transcriptChannel}`,
+                    `**Аудит:** ${auditChannel}`,
+                    `**Журналы регистрации тикетов:** ${lifecycleChannel}`,
+                    `**Расшифровки тикетов:** ${transcriptChannel}`,
                 ].join('\n'),
                 inline: false,
             },
             {
-                name: '📋 Event Categories',
+                name: '📋 Категории событий',
                 value: categoryLines,
                 inline: false,
             },
             {
-                name: '🧹 Ignore Filters',
-                value: `Users: **${ignoredUsers.length}**\nChannels: **${ignoredChannels.length}**`,
+                name: '🧹 Игнорировать фильтры',
+                value: `Пользователи: **${ignoredUsers.length}**\nКаналы: **${ignoredChannels.length}**`,
                 inline: true,
             },
             {
-                name: '🕒 Last Refresh',
+                name: '🕒 Последнее обновление',
                 value: `<t:${Math.floor(Date.now() / 1000)}:R>`,
                 inline: true,
             },
         )
-        .setFooter({ text: 'Use /logging setchannel to configure the audit channel  •  /ticket setup or /ticket dashboard to configure ticket channels' })
+        .setFooter({ text: 'Воспользуйся /logging setchannel как настроить канал аудита  •  /ticket setup или /ticket dashboard как настроить каналы подачи тикетов' })
         .setTimestamp();
 
     const components = createLoggingDashboardComponents(loggingStatus.enabledEvents, auditEnabled);
@@ -118,7 +118,7 @@ export default {
         try {
             if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
                 return InteractionHelper.safeReply(interaction, {
-                    embeds: [errorEmbed('Permission Denied', 'You need **Manage Server** permissions to view the logging dashboard.')],
+                    embeds: [errorEmbed('В разрешении отказано', 'Тебе нужно **Управление сервером** разрешения на просмотр панели управления журналами.')],
                 });
             }
 
