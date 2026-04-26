@@ -9,11 +9,11 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 export default {
     data: new SlashCommandBuilder()
     .setName("purge")
-    .setDescription("Delete a specific amount of messages")
+    .setDescription("Удалить определенное количество сообщений")
     .addIntegerOption((option) =>
       option
         .setName("amount")
-        .setDescription("Number of messages (1-100)")
+        .setDescription("Количество сообщений (1-100)")
         .setRequired(true),
     )
 .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
@@ -22,7 +22,7 @@ export default {
   async execute(interaction, config, client) {
     const deferSuccess = await InteractionHelper.safeDefer(interaction);
     if (!deferSuccess) {
-      logger.warn(`Purge interaction defer failed`, {
+      logger.warn(`Не удалось выполнить очистку при отсрочке взаимодействия`, {
         userId: interaction.user.id,
         guildId: interaction.guildId,
         commandName: 'purge'
@@ -34,8 +34,8 @@ export default {
       return await InteractionHelper.safeEditReply(interaction, {
         embeds: [
           errorEmbed(
-            "Permission Denied",
-            "You need the `Manage Messages` permission to purge messages.",
+            "В разрешении отказано",
+            "Вам нужен `Управление сообщениями` разрешение на удаление сообщений.",
           ),
         ],
       });
@@ -48,7 +48,7 @@ export default {
         embeds: [
           errorEmbed(
             "Invalid Amount",
-            "Please specify a number between 1 and 100.",
+            "Пожалуйста, укажите число между 1 и 100.",
           ),
         ],
       });
@@ -61,8 +61,8 @@ export default {
         return await InteractionHelper.safeEditReply(interaction, {
           embeds: [
             warningEmbed(
-              "You're purging messages too fast. Please wait a minute before trying again.",
-              "⏳ Rate Limited"
+              "Вы слишком быстро очищаете сообщения. Пожалуйста, подождите минуту, прежде чем повторить попытку.",
+              "⏳ Ставка ограничена"
             ),
           ],
           flags: MessageFlags.Ephemeral,
@@ -74,28 +74,28 @@ export default {
       const deletedCount = deleted.size;
 
       const purgeEmbed = createEmbed(
-        "🗑️ Messages Purged (Action Log)",
-        `${deletedCount} messages were deleted by ${interaction.user}.`,
+        "🗑️ Сообщения удалены (Журнал действий)",
+        `${deletedCount} сообщения были удалены пользователем ${interaction.user}.`,
       )
 .setColor(getColor('moderation'))
         .addFields(
-          { name: "Channel", value: channel.toString(), inline: true },
+          { name: "Канал", value: channel.toString(), inline: true },
           {
-            name: "Moderator",
+            name: "Модератор",
             value: `${interaction.user.tag} (${interaction.user.id})`,
             inline: true,
           },
-          { name: "Count", value: `${deletedCount} messages`, inline: false },
+          { name: "Рассчитывать", value: `${deletedCount} сообщения`, inline: false },
         );
 
       await logEvent({
         client,
         guild: interaction.guild,
         event: {
-          action: "Messages Purged",
-          target: `${channel} (${deletedCount} messages)`,
+          action: "Сообщения удалены",
+          target: `${channel} (${deletedCount} сообщения)`,
           executor: `${interaction.user.tag} (${interaction.user.id})`,
-          reason: `Deleted ${deletedCount} messages`,
+          reason: `Удаленные ${deletedCount} сообщения`,
           metadata: {
             channelId: channel.id,
             messageCount: deletedCount,
@@ -107,7 +107,7 @@ export default {
 
       await InteractionHelper.safeEditReply(interaction, {
         embeds: [
-          successEmbed(`🗑️ Deleted ${deletedCount} messages in ${channel}.`),
+          successEmbed(`🗑️ Удаленный ${deletedCount} сообщения в ${channel}.`),
         ],
 flags: MessageFlags.Ephemeral,
       });
@@ -122,7 +122,7 @@ flags: MessageFlags.Ephemeral,
       await InteractionHelper.safeEditReply(interaction, {
         embeds: [
           errorEmbed(
-            "An unexpected error occurred during message deletion. Note: Messages older than 14 days cannot be bulk deleted.",
+            "Произошла непредвиденная ошибка при удалении сообщения. Примечание: сообщения, отправленные более 14 дней назад, не могут быть удалены массово.",
           ),
         ],
         flags: MessageFlags.Ephemeral,
