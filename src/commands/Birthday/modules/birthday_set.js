@@ -20,8 +20,8 @@ export default {
             
             await InteractionHelper.safeEditReply(interaction, {
                 embeds: [successEmbed(
-                    `Your birthday has been set to **${result.data.monthName} ${result.data.day}**!`,
-                    "Birthday Set! 🎂"
+                    `Ваш день рождения назначен на **${result.data.monthName} ${result.data.day}**!`,
+                    "День рождения установлен! 🎂"
                 )]
             });
         } catch (error) {
