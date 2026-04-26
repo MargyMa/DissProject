@@ -38,49 +38,49 @@ function getApplicationStatusPresentation(statusValue) {
 export default {
     data: new SlashCommandBuilder()
     .setName("app-admin")
-    .setDescription("Manage staff applications")
+    .setDescription("Управление заявками сотрудников")
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
     .addSubcommand((subcommand) =>
         subcommand
             .setName("setup")
-            .setDescription("Set up a new application")
+            .setDescription("Настройка нового приложения")
     )
     .addSubcommand((subcommand) =>
         subcommand
             .setName("review")
-            .setDescription("Approve or deny an application")
+            .setDescription("Одобрить или отклонить заявку")
             .addStringOption((option) =>
                 option
                     .setName("id")
-                    .setDescription("The application ID")
+                    .setDescription("Идентификатор приложения")
                     .setRequired(true),
             ),
     )
     .addSubcommand((subcommand) =>
         subcommand
             .setName("list")
-            .setDescription("List all applications")
+            .setDescription("Перечислите все приложения")
             .addStringOption((option) =>
                 option
                     .setName("status")
-                    .setDescription("Filter by status")
+                    .setDescription("Фильтровать по статусу")
                     .addChoices(
-                        { name: "Pending", value: "pending" },
-                        { name: "Approved", value: "approved" },
-                        { name: "Denied", value: "denied" },
+                        { name: "Ожидаемый", value: "pending" },
+                        { name: "Одобренный", value: "approved" },
+                        { name: "Отказано", value: "denied" },
                     ),
             )
             .addStringOption((option) =>
-                option.setName("role").setDescription("Filter by role ID"),
+                option.setName("role").setDescription("Фильтровать по идентификатору роли"),
             )
             .addUserOption((option) =>
-                option.setName("user").setDescription("Filter by user"),
+                option.setName("user").setDescription("Фильтровать по пользователю"),
             )
             .addNumberOption((option) =>
                 option
                     .setName("limit")
                     .setDescription(
-                        "Maximum number of applications to show (default: 10)",
+                        "Максимальное количество отображаемых заявок (default: 10)",
                     )
                     .setMinValue(1)
                     .setMaxValue(25),
@@ -89,11 +89,11 @@ export default {
     .addSubcommand((subcommand) =>
         subcommand
             .setName("dashboard")
-            .setDescription("Open the applications configuration dashboard")
+            .setDescription("Откройте панель управления конфигурацией приложений")
             .addStringOption((option) =>
                 option
                     .setName("application")
-                    .setDescription("Select an application to configure")
+                    .setDescription("Выберите приложение для настройки")
                     .setRequired(false)
                     .setAutocomplete(true),
             ),
@@ -104,7 +104,7 @@ export default {
     execute: withErrorHandling(async (interaction) => {
         if (!interaction.inGuild()) {
             return InteractionHelper.safeReply(interaction, {
-                embeds: [errorEmbed("This command can only be used in a server.")],
+                embeds: [errorEmbed("Эту команду можно использовать только на сервере.")],
                 flags: ["Ephemeral"],
             });
         }
@@ -143,7 +143,7 @@ async function handleSetup(interaction) {
     // Ensure interaction hasn't been deferred/replied yet (safety check)
     if (interaction.deferred || interaction.replied) {
         return InteractionHelper.safeReply(interaction, {
-            embeds: [errorEmbed("This interaction has already been processed. Please try the command again.")],
+            embeds: [errorEmbed("Это взаимодействие уже обработано. Пожалуйста, попробуйте ввести команду еще раз.")],
             flags: ["Ephemeral"],
         });
     }
@@ -169,7 +169,7 @@ async function handleSetup(interaction) {
                 .setCustomId('role_id')
                 .setLabel('Role ID')
                 .setStyle(TextInputStyle.Short)
-                .setPlaceholder('Right-click a role and copy its ID')
+                .setPlaceholder('Щелкните правой кнопкой мыши по роли и скопируйте ее идентификатор')
                 .setMaxLength(20)
                 .setMinLength(1)
                 .setRequired(true),
@@ -179,7 +179,7 @@ async function handleSetup(interaction) {
                 .setCustomId('app_question_1')
                 .setLabel('Question 1 (required)')
                 .setStyle(TextInputStyle.Short)
-                .setPlaceholder('Why do you want this role?')
+                .setPlaceholder('Почему вы хотите получить эту должность?')
                 .setMaxLength(100)
                 .setMinLength(1)
                 .setRequired(true),
@@ -189,7 +189,7 @@ async function handleSetup(interaction) {
                 .setCustomId('app_question_2')
                 .setLabel('Question 2 (optional)')
                 .setStyle(TextInputStyle.Short)
-                .setPlaceholder('What experience do you have?')
+                .setPlaceholder('Каким опытом вы обладаете?')
                 .setMaxLength(100)
                 .setRequired(false),
         ),
@@ -229,7 +229,7 @@ async function handleSetup(interaction) {
             role = await interaction.guild.roles.fetch(roleId);
         } catch (error) {
             await submitted.reply({
-                embeds: [errorEmbed('Invalid Role', 'The role ID you provided does not exist.')],
+                embeds: [errorEmbed('Недопустимая роль', 'Указанный вами идентификатор роли не существует.')],
                 flags: ['Ephemeral'],
             });
             return;
@@ -265,8 +265,8 @@ async function handleSetup(interaction) {
 
         await submitted.reply({
             embeds: [successEmbed(
-                '✅ Application Created',
-                `**${appName}** application has been created for ${role}.\n\nYou can customize the log channel, manager roles, questions, and retention period in the dashboard.`,
+                '✅ Созданное приложение',
+                `**${appName}** приложение было создано для ${role}.\n\nНа панели управления можно настроить канал журнала, роли менеджеров, вопросы и срок хранения данных.`,
             )],
             flags: ['Ephemeral'],
         });
@@ -278,7 +278,7 @@ async function handleSetup(interaction) {
 
     } catch (error) {
         if (error.message.includes('timeout')) {
-            logger.info('App setup modal timed out', { guildId: interaction.guild.id, userId: interaction.user.id });
+            logger.info('Время ожидания режима настройки приложения истекло', { guildId: interaction.guild.id, userId: interaction.user.id });
             return;
         }
         throw error;
@@ -296,7 +296,7 @@ async function handleReview(interaction) {
     );
     if (!application) {
         return InteractionHelper.safeEditReply(interaction, {
-            embeds: [errorEmbed("Application not found.")],
+            embeds: [errorEmbed("Приложение не найдено.")],
             flags: ["Ephemeral"],
         });
     }
@@ -304,7 +304,7 @@ async function handleReview(interaction) {
     if (application.status !== "pending") {
         return InteractionHelper.safeEditReply(interaction, {
             embeds: [
-                errorEmbed("This application has already been processed."),
+                errorEmbed("Это заявление уже обработано."),
             ],
             flags: ["Ephemeral"],
         });
@@ -312,8 +312,8 @@ async function handleReview(interaction) {
 
     // Show application details with approve/deny buttons
     const appEmbed = createEmbed({
-        title: `📋 Review Application`,
-        description: `**User:** <@${application.userId}>\n**Application:** ${application.roleName}\n**Application ID:** \`${appId}\``,
+        title: `📋 Рассмотрите заявку`,
+        description: `**Пользователь:** <@${application.userId}>\n**Приложение:** ${application.roleName}\n**Идентификатор приложения:** \`${appId}\``,
         color: 'info',
     });
 
@@ -322,7 +322,7 @@ async function handleReview(interaction) {
         application.answers.forEach((item, index) => {
             appEmbed.addFields({
                 name: `Q${index + 1}: ${item.question}`,
-                value: item.answer || '*No answer provided*',
+                value: item.answer || '*Ответа не последовало*',
                 inline: false
             });
         });
@@ -368,9 +368,9 @@ async function handleReview(interaction) {
             new ActionRowBuilder().addComponents(
                 new TextInputBuilder()
                     .setCustomId('review_reason')
-                    .setLabel('Reason (optional)')
+                    .setLabel('Причина (optional)')
                     .setStyle(TextInputStyle.Paragraph)
-                    .setPlaceholder('Provide a reason for this decision...')
+                    .setPlaceholder('Обоснуйте причину такого решения...')
                     .setMaxLength(500)
                     .setRequired(false),
             ),
@@ -388,7 +388,7 @@ async function handleReview(interaction) {
 
             if (!reasonSubmit) return;
 
-            const reason = reasonSubmit.fields.getTextInputValue('review_reason').trim() || "No reason provided.";
+            const reason = reasonSubmit.fields.getTextInputValue('review_reason').trim() || "Причина не указана.";
             const action = isApprove ? 'approve' : 'deny';
             const status = isApprove ? 'approved' : 'denied';
 
@@ -410,14 +410,14 @@ async function handleReview(interaction) {
                 const reviewStatus = getApplicationStatusPresentation(status);
                 const dmEmbed = createEmbed(
                     `${reviewStatus.statusEmoji} Application ${reviewStatus.statusLabel}`,
-                    `Your application for **${application.roleName}** has been **${status}**\n` +
-                        `**Note:** ${reason}\n\n` +
-                        `Use \`/apply status id:${appId}\` to view details.`
+                    `Ваше заявление на получение **${application.roleName}** был **${status}**\n` +
+                        `**Примечание:** ${reason}\n\n` +
+                        `Воспользуйся \`/apply status id:${appId}\` чтобы просмотреть подробную информацию.`
                 ).setColor(statusColor);
 
                 await user.send({ embeds: [dmEmbed] });
             } catch (error) {
-                logger.warn('Failed to send DM to user for application review', {
+                logger.warn('Не удалось отправить пользователю личное сообщение для рассмотрения заявки', {
                     error: error.message,
                     userId: application.userId,
                     applicationId: appId
@@ -483,8 +483,8 @@ async function handleReview(interaction) {
             await reasonSubmit.reply({
                 embeds: [
                     successEmbed(
-                        `Application ${status}`,
-                        `The application has been **${status}**.`,
+                        `Приложение ${status}`,
+                        `Заявка была подана **${status}**.`,
                     ),
                 ],
                 flags: ["Ephemeral"],
@@ -502,8 +502,8 @@ async function handleReview(interaction) {
     collector.on('end', async (collected, reason) => {
         if (reason === 'time') {
             const timeoutEmbed = createEmbed({
-                title: '⏱️ Review Timeout',
-                description: 'The review buttons have timed out.',
+                title: '⏱️ Время ожидания проверки',
+                description: 'Кнопки для просмотра отзывов отключены.',
                 color: 'warning',
             });
 
@@ -559,21 +559,21 @@ async function handleList(interaction) {
         
         if (applicationRoles.length > 0) {
             const embed = createEmbed({ 
-                title: "No Applications Found", 
-                description: "No submitted applications found matching the specified criteria.\n\nHowever, the following application roles are configured:" 
+                title: "Не найдено ни одной заявки", 
+                description: "Не найдено ни одной заявки, соответствующей указанным критериям.\n\nОднако настроены следующие роли приложения:" 
             });
 
             applicationRoles.forEach((appRole, index) => {
                 const role = interaction.guild.roles.cache.get(appRole.roleId);
                 embed.addFields({
                     name: `${index + 1}. ${appRole.name}`,
-                    value: `**Role:** ${role ? `<@&${appRole.roleId}>` : 'Role not found'}\n**Available for applications:** Yes`,
+                    value: `**Роль:** ${role ? `<@&${appRole.roleId}>` : 'Роль не найдена'}\n**Доступно для различных применений:** Да`,
                     inline: false
                 });
             });
 
             embed.setFooter({
-                text: "Users can apply with /apply submit or see available roles with /apply list"
+                text: "Пользователи могут подать заявку с помощью /apply submit или посмотреть доступные роли с помощью /apply list"
             });
 
             return InteractionHelper.safeEditReply(interaction, { embeds: [embed], flags: ["Ephemeral"] });
@@ -581,8 +581,8 @@ async function handleList(interaction) {
             return InteractionHelper.safeEditReply(interaction, {
                 embeds: [
                     errorEmbed(
-                        "No applications found and no application roles configured.\n" +
-                        "Use `/app-admin roles add` to configure application roles first."
+                        "Приложения не найдены, роли приложений не настроены.\n" +
+                        "Воспользуйся `/app-admin roles add` чтобы сначала настроить роли приложений."
                     ),
                 ],
                 flags: ["Ephemeral"],
@@ -594,7 +594,7 @@ async function handleList(interaction) {
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .slice(0, limit);
 
-    const embed = createEmbed({ title: "Submitted Applications", description: `Showing ${applications.length} applications.`, });
+    const embed = createEmbed({ title: "Поданные заявки", description: `Показ ${applications.length} приложения.`, });
 
     applications.forEach((app) => {
         const statusView = getApplicationStatusPresentation(app?.status);
@@ -608,9 +608,9 @@ async function handleList(interaction) {
         embed.addFields({
             name: `${statusView.statusEmoji} ${roleName} - ${username}`,
             value:
-                `**ID:** \`${app.id}\`\n` +
-                `**Status:** ${statusView.statusEmoji} ${statusView.statusLabel}\n` +
-                `**Date:** ${createdAtDisplay}`,
+                `**Идентификатор:** \`${app.id}\`\n` +
+                `**Статус:** ${statusView.statusEmoji} ${statusView.statusLabel}\n` +
+                `**Дата:** ${createdAtDisplay}`,
             inline: true,
         });
     });
@@ -628,14 +628,14 @@ export async function handleApplicationReviewModal(interaction) {
     if (!customId.startsWith('app_review_')) return;
     
     const [, appId, action] = customId.split('_');
-    const reason = interaction.fields.getTextInputValue('reason') || 'No reason provided.';
+    const reason = interaction.fields.getTextInputValue('reason') || 'Причина не указана.';
     const isApprove = action === 'approve';
     
     try {
         const application = await getApplication(interaction.client, interaction.guild.id, appId);
         if (!application) {
             return InteractionHelper.safeReply(interaction, {
-                embeds: [errorEmbed('Application not found.')],
+                embeds: [errorEmbed('Приложение не найдено.')],
                 flags: ["Ephemeral"]
             });
         }
@@ -653,9 +653,9 @@ export async function handleApplicationReviewModal(interaction) {
             const reviewStatus = getApplicationStatusPresentation(status);
             const dmEmbed = createEmbed(
                 `${reviewStatus.statusEmoji} Application ${reviewStatus.statusLabel}`,
-                `Your application for **${application.roleName}** has been **${status}**.\n` +
-                `**Note:** ${reason}\n\n` +
-                `Use \`/apply status id:${appId}\` to view details.`,
+                `Ваше заявление на получение **${application.roleName}** был **${status}**.\n` +
+                `**Примечание:** ${reason}\n\n` +
+                `Воспользуйся \`/apply status id:${appId}\` чтобы просмотреть подробную информацию.`,
                 isApprove ? '#00FF00' : '#FF0000'
             );
             
@@ -704,8 +704,8 @@ export async function handleApplicationReviewModal(interaction) {
         await InteractionHelper.safeEditReply(interaction, {
             embeds: [
                 successEmbed(
-                    `${getApplicationStatusPresentation(status).statusEmoji} Application ${getApplicationStatusPresentation(status).statusLabel}`,
-                    `The application has been marked as ${getApplicationStatusPresentation(status).statusLabel}.`
+                    `${getApplicationStatusPresentation(status).statusEmoji} Приложение ${getApplicationStatusPresentation(status).statusLabel}`,
+                    `Приложение помечено как ${getApplicationStatusPresentation(status).statusLabel}.`
                 )
             ],
             flags: ["Ephemeral"]
