@@ -16,19 +16,19 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 export default {
     data: new SlashCommandBuilder()
         .setName("gcreate")
-        .setDescription("Starts a new giveaway in a specified channel.")
+        .setDescription("Запускает новую раздачу на указанном канале.")
         .addStringOption((option) =>
             option
                 .setName("duration")
                 .setDescription(
-                    "How long the giveaway should last (e.g., 1h, 30m, 5d).",
+                    "Как долго должна длиться акция (e.g., 1h, 30m, 5d).",
                 )
                 .setRequired(true),
         )
         .addIntegerOption((option) =>
             option
                 .setName("winners")
-                .setDescription("The number of winners to pick.")
+                .setDescription("Количество победителей, которых нужно выбрать.")
                 .setMinValue(1)
                 .setMaxValue(10)
                 .setRequired(true),
@@ -36,13 +36,13 @@ export default {
         .addStringOption((option) =>
             option
                 .setName("prize")
-                .setDescription("The prize being given away.")
+                .setDescription("Вручаемый приз.")
                 .setRequired(true),
         )
         .addChannelOption((option) =>
             option
                 .setName("channel")
-                .setDescription("The channel to send the giveaway to (defaults to current channel).")
+                .setDescription("Канал для рассылки розыгрыша (defaults к текущему каналу).")
                 .addChannelTypes(ChannelType.GuildText)
                 .setRequired(false),
         )
@@ -53,9 +53,9 @@ export default {
             
             if (!interaction.inGuild()) {
                 throw new TitanBotError(
-                    'Giveaway command used outside guild',
+                    'Команда Giveaway использовалась вне гильдии',
                     ErrorTypes.VALIDATION,
-                    'This command can only be used in a server.',
+                    'Эту команду можно использовать только на сервере.',
                     { userId: interaction.user.id }
                 );
             }
@@ -63,9 +63,9 @@ export default {
             
             if (!interaction.member.permissions.has(PermissionFlagsBits.ManageGuild)) {
                 throw new TitanBotError(
-                    'User lacks ManageGuild permission',
+                    'У пользователя нет разрешения на создание ManageGuild',
                     ErrorTypes.PERMISSION,
-                    "You need the 'Manage Server' permission to start a giveaway.",
+                    "Вам нужен 'Управление сервером' разрешение на проведение розыгрыша призов.",
                     { userId: interaction.user.id, guildId: interaction.guildId }
                 );
             }
@@ -86,9 +86,9 @@ export default {
             
             if (!targetChannel.isTextBased()) {
                 throw new TitanBotError(
-                    'Target channel is not text-based',
+                    'Целевой канал не основан на тексте',
                     ErrorTypes.VALIDATION,
-                    'The channel must be a text channel.',
+                    'Канал должен быть текстовым.',
                     { channelId: targetChannel.id, channelType: targetChannel.type }
                 );
             }
@@ -117,7 +117,7 @@ export default {
             
             
             const giveawayMessage = await targetChannel.send({
-                content: "🎉 **NEW GIVEAWAY** 🎉",
+                content: "🎉 **НОВАЯ РАЗДАЧА** 🎉",
                 embeds: [embed],
                 components: [row],
             });
@@ -146,22 +146,22 @@ export default {
                         userId: interaction.user.id,
                         fields: [
                             {
-                                name: '🎁 Prize',
+                                name: '🎁 Приз',
                                 value: prizeName,
                                 inline: true
                             },
                             {
-                                name: '🏆 Winners',
+                                name: '🏆 Победители',
                                 value: winnerCount.toString(),
                                 inline: true
                             },
                             {
-                                name: '⏰ Duration',
+                                name: '⏰ Продолжительность',
                                 value: durationString,
                                 inline: true
                             },
                             {
-                                name: '📍 Channel',
+                                name: '📍 Канал',
                                 value: targetChannel.toString(),
                                 inline: true
                             }
@@ -178,8 +178,8 @@ export default {
             await InteractionHelper.safeReply(interaction, {
                 embeds: [
                     successEmbed(
-                        `Giveaway Started! 🎉`,
-                        `A new giveaway for **${prizeName}** has been started in ${targetChannel} and will end in **${durationString}**.`,
+                        `Розыгрыш призов начался! 🎉`,
+                        `Новый розыгрыш призов для **${prizeName}** было начато в ${targetChannel} и закончится в **${durationString}**.`,
                     ),
                 ],
                 flags: MessageFlags.Ephemeral,
