@@ -25,7 +25,7 @@ export async function handleDelete(interaction, client) {
     // Check permissions after deferring
     if (!interaction.member.permissions.has(PermissionFlagsBits.ManageChannels)) {
         await InteractionHelper.safeEditReply(interaction, { 
-            embeds: [errorEmbed("You need **Manage Channels** permission to delete counters.")]
+            embeds: [errorEmbed("Для удаления счетчиков вам потребуется разрешение **Управление каналами**.")]
         }).catch(logger.error);
         return;
     }
@@ -35,7 +35,7 @@ export async function handleDelete(interaction, client) {
 
         if (counters.length === 0) {
             await InteractionHelper.safeEditReply(interaction, {
-                embeds: [errorEmbed("No counters found to delete.")]
+                embeds: [errorEmbed("Не найдено счетчиков для удаления.")]
             }).catch(logger.error);
             return;
         }
@@ -43,7 +43,7 @@ export async function handleDelete(interaction, client) {
         const counterToDelete = counters.find(c => c.id === counterId);
         if (!counterToDelete) {
             await InteractionHelper.safeEditReply(interaction, {
-                embeds: [errorEmbed(`Counter with ID \`${counterId}\` not found. Use \`/counter list\` to see all counters.`)]
+                embeds: [errorEmbed(`Счетчик с идентификатором \`${counterId}\` не найдено. Воспользуйся \`/counter list\` чтобы увидеть все счетчики.`)]
             }).catch(logger.error);
             return;
         }
@@ -51,19 +51,19 @@ export async function handleDelete(interaction, client) {
         const channel = guild.channels.cache.get(counterToDelete.channelId);
 
         const embed = createEmbed({
-            title: "⚠️ Delete Counter & Channel",
-            description: `Are you sure you want to delete this counter and its channel?\n\n**ID:** \`${counterToDelete.id}\`\n**Type:** ${getCounterTypeDisplay(counterToDelete.type)}\n**Channel:** ${channel || 'Deleted Channel'}\n\n⚠️ **The channel will be permanently deleted!**`,
+            title: "⚠️ Удалить счетчик и канал",
+            description: `Вы уверены, что хотите удалить этот счетчик и его канал??\n\n**Идентификатор:** \`${counterToDelete.id}\`\n**Тип:** ${getCounterTypeDisplay(counterToDelete.type)}\n**Канал:** ${channel || 'Удаленный канал'}\n\n⚠️ **Канал будет удален без возможности восстановления!**`,
             color: getColor('error')
         });
 
         const row = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
                 .setCustomId(`counter-delete:confirm:${counterToDelete.id}:${interaction.user.id}`)
-                .setLabel("Confirm Delete")
+                .setLabel("Подтвердите удаление")
                 .setStyle(ButtonStyle.Danger),
             new ButtonBuilder()
                 .setCustomId(`counter-delete:cancel:${counterToDelete.id}:${interaction.user.id}`)
-                .setLabel("Cancel")
+                .setLabel("Отменить")
                 .setStyle(ButtonStyle.Secondary)
         );
 
@@ -91,7 +91,7 @@ export async function performDeletionByCounterId(client, guild, counterId) {
         if (!counter) {
             return {
                 success: false,
-                message: `Counter with ID \`${counterId}\` was not found.`
+                message: `Счетчик с идентификатором \`${counterId}\` не был найден.`
             };
         }
 
@@ -101,7 +101,7 @@ export async function performDeletionByCounterId(client, guild, counterId) {
         if (!saved) {
             return {
                 success: false,
-                message: "Failed to delete counter. Please try again."
+                message: "Не удалось удалить счетчик. Пожалуйста, попробуйте еще раз."
             };
         }
 
@@ -110,21 +110,21 @@ export async function performDeletionByCounterId(client, guild, counterId) {
 
         if (channel) {
             try {
-                await channel.delete(`Counter deleted - removing channel: ${counter.id}`);
+                await channel.delete(`Счетчик удален - удаление канала: ${counter.id}`);
                 channelDeleted = true;
             } catch (error) {
                 logger.error("Error deleting channel:", error);
             }
         }
 
-        let message = `✅ **Counter Deleted Successfully!**\n\n**ID:** \`${counter.id}\`\n**Type:** ${getCounterTypeDisplay(counter.type)}`;
+        let message = `✅ **Счетчик успешно удален!**\n\n**Идентификатор:** \`${counter.id}\`\n**Тип:** ${getCounterTypeDisplay(counter.type)}`;
         
         if (channelDeleted) {
-            message += `\n**Channel:** ${channel.name} (deleted)`;
+            message += `\n**Канал:** ${channel.name} (удаленный)`;
         } else if (channel) {
-            message += `\n**Channel:** ${channel.name} (failed to delete)`;
+            message += `\n**Канал:** ${channel.name} (не удалось удалить)`;
         } else {
-            message += `\n**Channel:** Already deleted`;
+            message += `\n**Канал:** Уже удален`;
         }
 
         return {
