@@ -24,7 +24,7 @@ export async function handleList(interaction, client) {
     // Check permissions after deferring
     if (!interaction.member.permissions.has(PermissionFlagsBits.ManageChannels)) {
         await InteractionHelper.safeEditReply(interaction, { 
-            embeds: [errorEmbed("You need **Manage Channels** permission to view counters.")]
+            embeds: [errorEmbed("Для просмотра счетчиков вам необходимо разрешение **Управление каналами**.")]
         }).catch(logger.error);
         return;
     }
@@ -55,25 +55,25 @@ export async function handleList(interaction, client) {
 
         if (validCounters.length === 0) {
             const embed = createEmbed({
-                title: "📋 Server Counters",
-                description: "No counters have been set up for this server yet.\n\nUse `/counter create` to set up your first counter!",
+                title: "📋 Счетчики серверов",
+                description: "Для этого сервера счетчики еще не настроены.\n\nВоспользуйся `/counter create` как установить свой первый счетчик!",
                 color: getColor('warning')
             });
 
             embed.addFields({
-                name: "🔧 **Available Counter Types**",
-                value: "👥 **Members + Bots** - Total server members\n👤 **Members Only** - Human members only\n🤖 **Bots Only** - Bot members only",
+                name: "🔧 **Доступные типы счетчиков**",
+                value: "👥 **Участники + Боты** - Общее количество участников сервера\n👤 **Только для участников** - Только для людей-участников\n🤖 **Только боты** - Только для пользователей ботов",
                 inline: false
             });
 
             embed.addFields({
-                name: "📝 **Usage Examples**",
-                value: "`/counter create type:members channel_type:voice category:Stats`\n`/counter create type:bots channel_type:text category:Server Info`\n`/counter list`",
+                name: "📝 **Примеры использования**",
+                value: "`/counter create type:members channel_type:voice category:Статистика`\n`/counter create type:bots channel_type:text category:Информация о сервере`\n`/counter list`",
                 inline: false
             });
 
             embed.setFooter({ 
-                text: "Counter System • Automatic updates every 15 minutes" 
+                text: "Встречная система • Автоматические обновления каждые 15 минут" 
             });
 
             await InteractionHelper.safeEditReply(interaction, { embeds: [embed] }).catch(logger.error);
@@ -81,8 +81,8 @@ export async function handleList(interaction, client) {
         }
 
         const embed = createEmbed({
-            title: `📋 Server Counters (${validCounters.length})`,
-            description: "Here are all the active counters for this server.\n\nCounters automatically update every 15 minutes.",
+            title: `📋 Счетчики серверов (${validCounters.length})`,
+            description: "Вот все активные счетчики для этого сервера.\n\nСчетчики автоматически обновляются каждые 15 минут.",
             color: getColor('info')
         });
 
@@ -101,28 +101,28 @@ export async function handleList(interaction, client) {
             
             embed.addFields({
                 name: `${getCounterTypeEmoji(counter.type)} Counter #${i + 1} - ${channel.name}`,
-                value: `**ID:** \`${counter.id}\`\n**Type:** ${getCounterTypeDisplay(counter.type)}\n**Channel:** ${channel}\n**Current Count:** ${currentCount}\n**Status:** ${status}\n**Created:** ${new Date(counter.createdAt).toLocaleDateString()}`,
+                value: `**Идентификатор:** \`${counter.id}\`\n**Тип:** ${getCounterTypeDisplay(counter.type)}\n**Канал:** ${channel}\n**Текущий счетчик:** ${currentCount}\n**Статус:** ${status}\n**Созданный:** ${new Date(counter.createdAt).toLocaleDateString()}`,
                 inline: false
             });
         }
 
         embed.addFields({
-            name: "📊 **Statistics**",
-            value: `**Total Counters:** ${validCounters.length}\n**Active Counters:** ${validCounters.filter(c => {
+            name: "📊 **Статистика**",
+            value: `**Общее количество счетчиков:** ${validCounters.length}\n**Активные счетчики:** ${validCounters.filter(c => {
                 const channel = guild.channels.cache.get(c.channelId);
                 return channel && channel.name.includes(':');
-            }).length}\n**Next Update:** <t:${Math.floor(Date.now() / 1000) + 900}:R>`,
+            }).length}\n**Следующее обновление:** <t:${Math.floor(Date.now() / 1000) + 900}:R>`,
             inline: false
         });
 
         embed.addFields({
-            name: "🔧 **Management Commands**",
-            value: "`/counter create` - Create new counter\n`/counter update` - Update existing counter\n`/counter delete` - Delete counter",
+            name: "🔧 **Команды управления**",
+            value: "`/counter create` - Создайте новый счетчик\n`/counter update` - Обновить существующий счетчик\n`/counter delete` - Удалить счетчик",
             inline: false
         });
 
         embed.setFooter({ 
-            text: "Counter System • Automatic updates every 15 minutes" 
+            text: "Система счетчиков • Автоматическое обновление каждые 15 минут" 
         });
         embed.setTimestamp();
 
