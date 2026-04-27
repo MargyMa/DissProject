@@ -15,18 +15,18 @@ const MAX_RESULTS = 5;
 export default {
     data: new SlashCommandBuilder()
         .setName("movie")
-        .setDescription("Search for a movie or TV show")
+        .setDescription("Поиск фильма или телешоу")
         .addStringOption((option) =>
             option
                 .setName("title")
-                .setDescription("The title of the movie or TV show")
+                .setDescription("Название фильма или телешоу")
                 .setRequired(true)
                 .setMaxLength(100),
         )
         .addStringOption((option) =>
             option
                 .setName("type")
-                .setDescription("Type of content to search for")
+                .setDescription("Тип контента для поиска")
                 .addChoices(
                     { name: "Movie", value: "movie" },
                     { name: "TV Show", value: "tv" },
@@ -54,8 +54,8 @@ export default {
                 return await InteractionHelper.safeEditReply(interaction, {
                     embeds: [
                         errorEmbed(
-                            "Command Disabled",
-                            "The movie/TV show search command is disabled in this server.",
+                            "Команда отключена",
+                            "На этом сервере отключена команда поиска фильмов и сериалов.",
                         ),
                     ],
                     flags: MessageFlags.Ephemeral,
@@ -70,8 +70,8 @@ export default {
                 return await InteractionHelper.safeEditReply(interaction, {
                     embeds: [
                         errorEmbed(
-                            "Configuration Error",
-                            "Movie/TV show search is not properly configured.",
+                            "Ошибка конфигурации",
+                            "Поиск фильмов и сериалов настроен неправильно.",
                         ),
                     ],
                     flags: MessageFlags.Ephemeral,
@@ -109,8 +109,8 @@ timeout: 8000,
                 return await InteractionHelper.safeEditReply(interaction, {
                     embeds: [
                         errorEmbed(
-                            "Not Found",
-                            `No ${type === "movie" ? "movies" : "TV shows"} found for "${title}".`,
+                            "не найдено",
+                            `Нет ${type === "movie" ? "movies" : "TV shows"} найденный для "${title}".`,
                         ),
                     ],
                 });
@@ -172,7 +172,7 @@ timeout: 8000,
 
             const embed = createEmbed({
                 title: `${mediaTitle} (${year})`,
-                description: details.overview || "No overview available.",
+                description: details.overview || "Обзор недоступен.",
                 color: 'info'
             })
                 .setURL(`https://www.themoviedb.org/${type}/${result.id}`)
@@ -191,23 +191,23 @@ timeout: 8000,
                         inline: true,
                     },
                     {
-                        name: "Content Rating",
+                        name: "Рейтинг контента",
                         value: contentRating,
                         inline: true,
                     },
                     { name: "Runtime", value: runtime, inline: true },
                     {
-                        name: "Release Date",
+                        name: "Дата выхода",
                         value: releaseDate
                             ? new Date(releaseDate).toLocaleDateString()
                             : "N/A",
                         inline: true,
                     },
-                    { name: "Genres", value: genres, inline: true },
-                    { name: "Cast", value: cast, inline: false },
+                    { name: "Жанры", value: genres, inline: true },
+                    { name: "В ролях", value: cast, inline: false },
                 )
                 .setFooter({
-                    text: "Powered by The Movie Database",
+                    text: "Работает на базе данных фильмов",
                     iconURL:
                         "https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_1-5bdc75aaebeb75dc7ae79426ddd9be3b2be1e342510f8202baf6bffa71d7f5c4.svg",
                 });
