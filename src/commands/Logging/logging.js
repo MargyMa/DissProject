@@ -50,8 +50,8 @@ export default {
                                 .setDescription('Стоит ли игнорировать пользователя или канал.')
                                 .setRequired(true)
                                 .addChoices(
-                                    { name: 'Пользователь', value: 'user' },
-                                    { name: 'Канал', value: 'channel' },
+                                    { name: 'User', value: 'user' },
+                                    { name: 'Channel', value: 'channel' },
                                 ),
                         )
                         .addStringOption((option) =>
@@ -71,8 +71,8 @@ export default {
                                 .setDescription('Будь то пользователь или канал.')
                                 .setRequired(true)
                                 .addChoices(
-                                    { name: 'Пользователь', value: 'user' },
-                                    { name: 'Канал', value: 'channel' },
+                                    { name: 'User', value: 'user' },
+                                    { name: 'Channel', value: 'channel' },
                                 ),
                         )
                         .addStringOption((option) =>
