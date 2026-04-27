@@ -25,14 +25,14 @@ export async function handleUpdate(interaction, client) {
     // Check permissions after deferring
     if (!interaction.member.permissions.has(PermissionFlagsBits.ManageChannels)) {
         await InteractionHelper.safeEditReply(interaction, { 
-            embeds: [errorEmbed("You need **Manage Channels** permission to update counters.")]
+            embeds: [errorEmbed("Для обновления счетчиков вам необходимо разрешение **Управление каналами**.")]
         }).catch(logger.error);
         return;
     }
 
     if (!newType) {
         await InteractionHelper.safeEditReply(interaction, {
-            embeds: [errorEmbed("You must provide a new counter type to update.")]
+            embeds: [errorEmbed("Для обновления необходимо указать новый тип счетчика.")]
         }).catch(logger.error);
         return;
     }
@@ -43,7 +43,7 @@ export async function handleUpdate(interaction, client) {
         const counterIndex = counters.findIndex(c => c.id === counterId);
         if (counterIndex === -1) {
             await InteractionHelper.safeEditReply(interaction, {
-                embeds: [errorEmbed(`Counter with ID \`${counterId}\` not found. Use \`/counter list\` to see all counters.`)]
+                embeds: [errorEmbed(`Счетчик с идентификатором \`${counterId}\` не найдено. Воспользуйся \`/counter list\` чтобы увидеть все счетчики.`)]
             }).catch(logger.error);
             return;
         }
@@ -53,7 +53,7 @@ export async function handleUpdate(interaction, client) {
 
         if (!oldChannel) {
             await InteractionHelper.safeEditReply(interaction, {
-                embeds: [errorEmbed("The channel for this counter no longer exists. You cannot update a counter for a deleted channel.")]
+                embeds: [errorEmbed("Канал для этого счетчика больше не существует. Вы не можете обновить счетчик для удаленного канала.")]
             }).catch(logger.error);
             return;
         }
@@ -63,7 +63,7 @@ export async function handleUpdate(interaction, client) {
             if (existingTypeCounter) {
                 const existingChannel = guild.channels.cache.get(existingTypeCounter.channelId);
                 await InteractionHelper.safeEditReply(interaction, {
-                    embeds: [errorEmbed(`A **${getCounterTypeLabel(newType)}** counter already exists for this server${existingChannel ? ` in ${existingChannel}` : ''}. Delete it first before reusing that type.`)]
+                    embeds: [errorEmbed(`A **${getCounterTypeLabel(newType)}** Счетчик уже существует для этого сервера${existingChannel ? ` в ${existingChannel}` : ''}. Сначала удалите его, прежде чем использовать повторно.`)]
                 }).catch(logger.error);
                 return;
             }
@@ -77,7 +77,7 @@ export async function handleUpdate(interaction, client) {
         const saved = await saveServerCounters(client, guild.id, counters);
         if (!saved) {
             await InteractionHelper.safeEditReply(interaction, {
-                embeds: [errorEmbed("Failed to save updated counter data. Please try again.")]
+                embeds: [errorEmbed("Не удалось сохранить обновленные данные счетчика. Пожалуйста, попробуйте еще раз.")]
             }).catch(logger.error);
             return;
         }
@@ -86,7 +86,7 @@ export async function handleUpdate(interaction, client) {
         const updated = await updateCounter(client, guild, updatedCounter);
         if (!updated) {
             await InteractionHelper.safeEditReply(interaction, {
-                embeds: [errorEmbed("Counter updated but failed to update channel name. The counter will update on the next scheduled run.")]
+                embeds: [errorEmbed("Счетчик обновлен, но не удалось обновить название канала. Счетчик обновится при следующем запланированном запуске.")]
             }).catch(logger.error);
             return;
         }
@@ -94,7 +94,7 @@ export async function handleUpdate(interaction, client) {
         const finalChannel = guild.channels.cache.get(updatedCounter.channelId);
 
         await InteractionHelper.safeEditReply(interaction, {
-            embeds: [successEmbed(`✅ **Counter Updated Successfully!**\n\n**Counter ID:** \`${counterId}\`\n**Type Changed:** ${getCounterEmoji(oldType)} ${getCounterTypeLabel(oldType)} → ${getCounterEmoji(newType)} ${getCounterTypeLabel(newType)}\n\n**Current Settings:**\n**Type:** ${getCounterEmoji(updatedCounter.type)} ${getCounterTypeLabel(updatedCounter.type)}\n**Channel:** ${finalChannel}\n**Channel Name:** ${finalChannel.name}\n\nThe counter will automatically update every 15 minutes.`)]
+            embeds: [successEmbed(`✅ **Счетчик успешно обновлен!**\n\n**Идентификатор счетчика:** \`${counterId}\`\n**Изменен тип:** ${getCounterEmoji(oldType)} ${getCounterTypeLabel(oldType)} → ${getCounterEmoji(newType)} ${getCounterTypeLabel(newType)}\n\n**Текущие настройки:**\n**Тип:** ${getCounterEmoji(updatedCounter.type)} ${getCounterTypeLabel(updatedCounter.type)}\n**Канал:** ${finalChannel}\n**Название канала:** ${finalChannel.name}\n\nСчетчик будет автоматически обновляться каждые 15 минут.`)]
         }).catch(logger.error);
 
     } catch (error) {
