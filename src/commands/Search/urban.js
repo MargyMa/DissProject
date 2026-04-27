@@ -10,10 +10,10 @@ import { getColor } from '../../config/bot.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('urban')
-        .setDescription('Search Urban Dictionary for definitions')
+        .setDescription('Найдите определения в городском словаре')
         .addStringOption(option => 
             option.setName('term')
-                .setDescription('The term to look up on Urban Dictionary')
+                .setDescription('Термин, который стоит поискать в Urban Dictionary')
                 .setRequired(true)),
     
     async execute(interaction) {
@@ -27,7 +27,7 @@ export default {
                     guildId: interaction.guildId
                 });
                 return await InteractionHelper.safeReply(interaction, {
-                    embeds: [errorEmbed('Error', 'Please enter a term with at least 2 characters.')],
+                    embeds: [errorEmbed('Ошибка', 'Пожалуйста, введите термин, состоящий как минимум из двух символов.')],
                     flags: MessageFlags.Ephemeral
                 });
             }
@@ -40,7 +40,7 @@ export default {
                     commandName: 'urban'
                 });
                 return await InteractionHelper.safeReply(interaction, {
-                    embeds: [errorEmbed('Command Disabled', 'The Urban Dictionary command is disabled in this server.')],
+                    embeds: [errorEmbed('Команда отключена', 'Команда Urban Dictionary отключена на этом сервере.')],
                     flags: MessageFlags.Ephemeral
                 });
             }
@@ -71,7 +71,7 @@ export default {
             
             if (!response.data?.list?.length) {
                 return await InteractionHelper.safeReply(interaction, {
-                    embeds: [errorEmbed('Not Found', `No definitions found for "${term}" on Urban Dictionary.`)]
+                    embeds: [errorEmbed('не найдено', `Не найдено определений для "${term}" о городском словаре.`)]
                 });
             }
             
@@ -85,7 +85,7 @@ export default {
                 
             const formattedExample = cleanExample
                 ? `*"${cleanExample.replace(/\n/g, ' ').slice(0, 500)}..."*`
-                : '*No example provided*';
+                : '*Никаких примеров приведено не было*';
             
             const embed = createEmbed({
                 title: definition.word,
@@ -95,23 +95,23 @@ export default {
             .setURL(definition.permalink)
             .addFields(
                 { 
-                    name: 'Example', 
+                    name: 'Пример', 
                     value: formattedExample,
                     inline: false 
                 },
                 { 
-                    name: 'Stats', 
+                    name: 'Статистика', 
                     value: `👍 ${definition.thumbs_up.toLocaleString()} • 👎 ${definition.thumbs_down.toLocaleString()}`,
                     inline: true 
                 },
                 { 
-                    name: 'Author', 
-                    value: definition.author || 'Anonymous',
+                    name: 'Автор', 
+                    value: definition.author || 'Анонимный',
                     inline: true 
                 }
             )
             .setFooter({ 
-                text: 'Urban Dictionary',
+                text: 'Городской словарь',
                 iconURL: 'https://i.imgur.com/8aQrX3a.png' 
             });
                 
@@ -138,11 +138,11 @@ export default {
             
             if (error.response?.status === 404 || !error.response) {
                 await InteractionHelper.safeEditReply(interaction, {
-                    embeds: [errorEmbed('Not Found', `No definitions found for "${interaction.options.getString('term')}" on Urban Dictionary.`)]
+                    embeds: [errorEmbed('не найдено', `Не найдено определений для "${interaction.options.getString('term')}" о городском словаре.`)]
                 });
             } else if (error.response?.status === 429) {
                 await InteractionHelper.safeEditReply(interaction, {
-                    embeds: [errorEmbed('Rate Limited', 'Too many requests to Urban Dictionary. Please try again in a few minutes.')]
+                    embeds: [errorEmbed('Ставка ограничена', 'Слишком много запросов к Urban Dictionary. Пожалуйста, повторите попытку через несколько минут.')]
                 });
             } else {
                 await handleInteractionError(interaction, error, {
