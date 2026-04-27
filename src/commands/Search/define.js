@@ -9,10 +9,10 @@ import { getColor } from '../../config/bot.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('define')
-        .setDescription('Look up a word definition')
+        .setDescription('Найдите определение слова')
         .addStringOption(option => 
             option.setName('word')
-                .setDescription('The word to look up')
+                .setDescription('Слово, которое нужно найти')
                 .setRequired(true)),
     async execute(interaction) {
         try {
@@ -31,7 +31,7 @@ export default {
                     guildId: interaction.guildId
                 });
                 return await InteractionHelper.safeEditReply(interaction, {
-                    embeds: [errorEmbed('Error', 'Please enter a word with at least 2 characters.')],
+                    embeds: [errorEmbed('Ошибка', 'Пожалуйста, введите слово длиной не менее 2 символов.')],
                     flags: MessageFlags.Ephemeral
                 });
             }
@@ -43,7 +43,7 @@ export default {
             
             if (!response.data || response.data.length === 0) {
                 return await InteractionHelper.safeEditReply(interaction, {
-                    embeds: [errorEmbed('Not Found', `No definitions found for "${word}".`)]
+                    embeds: [errorEmbed('не найдено', `Не найдено определений для "${word}".`)]
                 });
             }
             
@@ -68,14 +68,14 @@ export default {
                 
                 if (definitions) {
                     embed.addFields({
-                        name: `**${meaning.partOfSpeech || 'Definition'}**`,
+                        name: `**${meaning.partOfSpeech || 'Определение'}**`,
                         value: definitions,
                         inline: false
                     });
                 }
             });
             
-            embed.setFooter({ text: 'Powered by Free Dictionary API' });
+            embed.setFooter({ text: 'Работает на основе бесплатного словарного API' });
             
             await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
             
@@ -99,7 +99,7 @@ export default {
             
             if (error.response?.status === 404) {
                 await InteractionHelper.safeEditReply(interaction, {
-                    embeds: [errorEmbed('Not Found', `No definitions found for "${interaction.options.getString('word')}".`)]
+                    embeds: [errorEmbed('не найдено', `Не найдено определений для "${interaction.options.getString('word')}".`)]
                 });
             } else {
                 await handleInteractionError(interaction, error, {
