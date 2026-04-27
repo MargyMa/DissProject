@@ -12,16 +12,16 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 export default {
     data: new SlashCommandBuilder()
         .setName("serverstats")
-        .setDescription("Manage server statistics that track member counts and channel data")
+        .setDescription("Управление статистикой сервера, которая отслеживает количество участников и данные о каналах")
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
         .addSubcommand(subcommand =>
             subcommand
                 .setName("create")
-                .setDescription("Create a new statistics tracker channel in a category")
+                .setDescription("Создайте новый канал для отслеживания статистики в определенной категории")
                 .addStringOption(option =>
                     option
                         .setName("type")
-                        .setDescription("The type of statistics to track")
+                        .setDescription("Тип отслеживаемой статистики")
                         .setRequired(true)
                         .addChoices(
                             { name: "members + bots", value: "members" },
@@ -32,7 +32,7 @@ export default {
                 .addStringOption(option =>
                     option
                         .setName("channel_type")
-                        .setDescription("The channel type to create for this tracker")
+                        .setDescription("Тип канала для создания этого трекера")
                         .setRequired(true)
                         .addChoices(
                             { name: "voice channel (recommended)", value: "voice" },
@@ -42,7 +42,7 @@ export default {
                 .addChannelOption(option =>
                     option
                         .setName("category")
-                        .setDescription("The category where the statistics tracker channel will be created")
+                        .setDescription("Категория, в которой будет создан канал для отслеживания статистики")
                         .setRequired(true)
                         .addChannelTypes(ChannelType.GuildCategory)
                 )
@@ -50,22 +50,22 @@ export default {
         .addSubcommand(subcommand =>
             subcommand
                 .setName("list")
-                .setDescription("List all statistics trackers for this server")
+                .setDescription("Список всех трекеров статистики для этого сервера")
         )
         .addSubcommand(subcommand =>
             subcommand
                 .setName("update")
-                .setDescription("Update an existing statistics tracker")
+                .setDescription("Обновите существующий трекер статистики")
                 .addStringOption(option =>
                     option
                         .setName("counter-id")
-                        .setDescription("The ID of the tracker to update")
+                        .setDescription("Идентификатор трекера для обновления")
                         .setRequired(true)
                 )
                 .addStringOption(option =>
                     option
                         .setName("type")
-                        .setDescription("The new tracker type")
+                        .setDescription("Новый тип трекера")
                         .setRequired(false)
                         .addChoices(
                             { name: "members + bots", value: "members" },
@@ -77,7 +77,7 @@ export default {
         .addSubcommand(subcommand =>
             subcommand
                 .setName("delete")
-                .setDescription("Delete an existing statistics tracker")
+                .setDescription("Удаление существующего трекера статистики")
                 .addStringOption(option =>
                     option
                         .setName("counter-id")
@@ -113,8 +113,8 @@ export default {
             logger.error(`Error in serverstats ${subcommand}:`, error);
             
             const errorEmbedMsg = createEmbed({ 
-                title: "❌ Error", 
-                description: "An error occurred while processing your request.",
+                title: "❌ Ошибка", 
+                description: "Произошла ошибка при обработке вашего запроса.",
                 color: getColor('error')
             });
 
