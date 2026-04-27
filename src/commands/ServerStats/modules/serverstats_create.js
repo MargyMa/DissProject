@@ -34,7 +34,7 @@ export async function handleCreate(interaction, client) {
     try {
         if (!category || category.type !== ChannelType.GuildCategory) {
             await InteractionHelper.safeEditReply(interaction, {
-                embeds: [errorEmbed("Please select a valid category for the counter channel.")]
+                embeds: [errorEmbed("Пожалуйста, выберите подходящую категорию для канала счетчика.")]
             }).catch(logger.error);
             return;
         }
@@ -49,7 +49,7 @@ export async function handleCreate(interaction, client) {
         if (duplicateType) {
             const duplicateChannel = guild.channels.cache.get(duplicateType.channelId);
             await InteractionHelper.safeEditReply(interaction, {
-                embeds: [errorEmbed(`A **${getCounterTypeLabel(type)}** counter already exists for this server${duplicateChannel ? ` in ${duplicateChannel}` : ''}. Delete it first before creating another.`)]
+                embeds: [errorEmbed(`A **${getCounterTypeLabel(type)}** Счетчик уже существует для этого сервера${duplicateChannel ? ` in ${duplicateChannel}` : ''}. Сначала удалите его, прежде чем создавать новый.`)]
             }).catch(logger.error);
             return;
         }
@@ -58,13 +58,13 @@ export async function handleCreate(interaction, client) {
             name: baseChannelName,
             type: targetChannelType,
             parent: category.id,
-            reason: `Counter channel created by ${interaction.user.tag}`
+            reason: `Встречный канал, созданный с помощью ${interaction.user.tag}`
         });
 
         const existingCounter = counters.find(c => c.channelId === targetChannel.id);
         if (existingCounter) {
             await InteractionHelper.safeEditReply(interaction, {
-                embeds: [errorEmbed(`A counter already exists for channel **${targetChannel.name}**. Please delete it first or choose a different type.`)]
+                embeds: [errorEmbed(`Для канала уже существует счетчик **${targetChannel.name}**. Пожалуйста, сначала удалите его или выберите другой тип.`)]
             }).catch(logger.error);
             return;
         }
@@ -82,9 +82,9 @@ export async function handleCreate(interaction, client) {
 
         const saved = await saveServerCounters(client, guild.id, counters);
         if (!saved) {
-            await targetChannel.delete('Counter creation failed during save').catch(() => null);
+            await targetChannel.delete('Ошибка создания счетчика во время сохранения').catch(() => null);
             await InteractionHelper.safeEditReply(interaction, {
-                embeds: [errorEmbed("Failed to save counter data. Please try again.")]
+                embeds: [errorEmbed("Не удалось сохранить данные счетчика. Пожалуйста, попробуйте еще раз.")]
             }).catch(logger.error);
             return;
         }
@@ -92,19 +92,19 @@ export async function handleCreate(interaction, client) {
         const updated = await updateCounter(client, guild, newCounter);
         if (!updated) {
             await InteractionHelper.safeEditReply(interaction, {
-                embeds: [errorEmbed("Counter created but failed to update channel name. The counter will update on the next scheduled run.")]
+                embeds: [errorEmbed("Счетчик создан, но не удалось обновить название канала. Счетчик обновится при следующем запланированном запуске.")]
             }).catch(logger.error);
             return;
         }
 
         await InteractionHelper.safeEditReply(interaction, {
-            embeds: [successEmbed(`✅ **Counter Created Successfully!**\n\n**Type:** ${getCounterTypeLabel(type)}\n**Channel Type:** ${targetChannel.type === ChannelType.GuildVoice ? 'voice' : 'text'}\n**Category:** ${category}\n**Channel:** ${targetChannel}\n**Channel Name:** ${targetChannel.name}\n**Counter ID:** \`${newCounter.id}\`\n\nThe counter will automatically update every 15 minutes.\n\nUse \`/counter list\` to view all counters.`)]
+            embeds: [successEmbed(`✅ **Счетчик успешно создан!**\n\n**Тип:** ${getCounterTypeLabel(type)}\n**Тип канала:** ${targetChannel.type === ChannelType.GuildVoice ? 'voice' : 'text'}\n**Категория:** ${category}\n**Канал:** ${targetChannel}\n**Название канала:** ${targetChannel.name}\n**Идентификатор счетчика:** \`${newCounter.id}\`\n\nСчетчик будет автоматически обновляться каждые 15 минут.\n\nВоспользуйся \`/counter list\` чтобы просмотреть все счетчики.`)]
         }).catch(logger.error);
 
     } catch (error) {
         logger.error("Error creating counter:", error);
         await InteractionHelper.safeEditReply(interaction, {
-            embeds: [errorEmbed("An error occurred while creating the counter. Please try again.")]
+            embeds: [errorEmbed("Произошла ошибка при создании счетчика. Пожалуйста, попробуйте еще раз.")]
         }).catch(logger.error);
     }
 }
